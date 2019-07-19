@@ -12,6 +12,10 @@ SCREENDISTANCE = 57
 SCREENWIDTH = 30
 
 FILEPATH = ''
+PROCEDURE_PATH = 'Data/Procedures/'
+FEATURE_PATH = 'Data/Images/Features_Placed/'
+RESULTS_PATH = 'Data/Results/'
+IMAGES_MAP_PATH = 'Data/imagemap.xlsx'
 
 INPUT_MODE = 0
 
