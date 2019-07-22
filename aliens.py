@@ -6,6 +6,14 @@ import datetime
 import pandas as pd
 import math
 
+'''List of things to do:
+1. Get the right positions/sizes for aliens to draw and pass them to the assembly code
+2. Provide a function allowing the experiment to resume from a previous save point
+3. Check that the experiment satisfies all the trial requirements
+4. Refine graphics to make experiment screen a little neater?
+'''
+
+
 from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH
 from AlienAssembly import get_aliens
 '''More constant parameters used for the functions.'''
@@ -33,7 +41,7 @@ NUM_MEMORY_BUTTONS = 4
 NUM_FEATURE_BUTTONS = 3
 NUM_GENERAL_BUTTONS = 3
 NUM_FEATURES = 8
-ALIEN_SIZE = [0.45, 0.6]
+ALIEN_SIZE = [0.15, 0.3]
 CONTEXT_SIZE = [0.9, 0.7]
 REDUCED_CONTEXT_SIZE = [0.3, 0.3]
 FEATURE_SIZE = [0.05, 0.05]
@@ -90,8 +98,8 @@ def create_buttons_from_dimensions(window, x_pos_array, y_pos_array, num_buttons
             blue_color = math.floor(i / (num_buttons - 1) * 255)
             fill_color_array.append((red_color, green_color, blue_color))
 
+    '''Creates the buttons in the window from dimensions.'''
     for i in range (num_buttons):
-        print(len(fill_color_array))
         button_array.append(visual.Rect(window, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = 0.2, height = 0.05, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
     return button_array
 
@@ -126,7 +134,6 @@ def create_buttons_text(window):
     general_button_text = button_text_from_dimensions(window, general_text_content, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS)
     return study_button_text, memory_button_text, feature_button_text, general_button_text
 
-'''def instruction_procedure(window, mouse, procedure):'''
 
 
 
@@ -146,6 +153,8 @@ def draw_alien(stim_list):
 def get_response(window, mouse, button_array, clock, wait_time, num_options):
     '''Depending on the input mode(mouse, MRI buttons, etc.), gets a response from the user under the timed conditions(wait_time), and returns
         the response as well as the response time.'''
+
+    '''A negative wait-time means that there is no time limit.'''
     response_time = wait_time
     response = 'No answer'
 
@@ -187,7 +196,7 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
              keys = ['q', 's', 'd', 'f', 'j', 'k', 'l']
         
         
-        '''Gets response when a key is pressed. If the key pressed is 'q', the experiment ends. Otherwise, the appropriate response is collected.'''
+        '''Gets response when one of the keys above is pressed. If the key pressed is 'q', the experiment ends. Otherwise, the appropriate response is collected.'''
         
         if wait_time < 0:
             selection = event.waitKeys(keyList = keys[0:num_options + 1], timeStamped=clock)
@@ -230,12 +239,14 @@ def display_incorrect_message(window):
     window.flip(clearBuffer=False)
 
 def post_procedure(window, procedure, response_time, response, accuracy, confidence):
+    '''After every trial, the results are written to the result file and the screen is cleared.'''
     record_procedure(procedure, response_time, response, accuracy, confidence)
     window.flip()
     window.flip()
     core.wait(0.5)
 
 def delay(clock, delay_time):
+    '''Delays the program by a set amount of time.'''
     clock.reset()
     while clock.getTime() < delay_time:
         continue
@@ -251,7 +262,6 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
     answer which side the alien is on using the buttons. If they are correct, they will study the alien in its context for 4 more seconds.
     Otherwise, nothing happens.'''
     
-    stim_list = get_aliens(IMAGES_MAP_PATH, procedure, window)
     
     context_path = procedure['Context Path 1']
 
@@ -264,16 +274,19 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
     
     '''Draws alien in context, along with buttons.'''
     alien_position = ALIEN_ALIGN_RIGHT_POS if (int(procedure['Left/Right']) == 1) else ALIEN_ALIGN_LEFT_POS
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, alien_position, 0.2)
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(stim_list)
     draw_buttons_and_text(study_buttons, button_text, NUM_STUDY_BUTTONS)
     window.flip(clearBuffer=False)
 
     
+    '''User must answer the side the alien is displayed on within a few seconds.'''
     possible_answers = ["Left", "Right"]
     response_time, response = get_response(window, mouse, study_buttons, clock, 5, 2)
     accuracy = 0
-    '''Response is correct if user answers the correct side the alien is on.'''
+    
+    '''If the response is incorrect, display an appropriate error message.'''
     if response == "No answer" or procedure['Correct Answer'] != possible_answers[int(response)]:
         accuracy = 0
         display_incorrect_message(window)
@@ -282,6 +295,7 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
         '''If the user answers correctly, display the alien and context for 4 more seconds.'''
         accuracy = 1
         draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+        stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
         draw_alien(stim_list)
         window.flip(clearBuffer=False)
         delay(clock, 4)
@@ -294,7 +308,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     encountered in the study phase. Additionally, he also answers whether or not he is sure or unsure about his answer.'''
 
     '''Draws alien and buttons on screen.'''
-    stim_list = get_aliens(IMAGES_MAP_PATH, procedure, window)
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
     draw_alien(stim_list)
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
     window.flip(clearBuffer=False)
@@ -310,17 +324,6 @@ def draw_feature(window, feature_position, feature_path):
     feature = visual.ImageStim(window, image = FILEPATH + feature_path, size = FEATURE_SIZE, pos = feature_position)
     feature.draw()
 
-'''
-def get_feature(procedure):
-    feature_index = 0
-    gender = procedure[3]
-    for i in range(4, 10):
-        if procedure[i] != "NA":
-            feature_index = i
-            break
-    feature_path = 'Features/f' + str(gender) + str(feature_index) + procedure[feature_index] + '.jpg'
-    return feature_path
-'''   
 
 def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_text):
     '''Gets feature to be tested.'''
@@ -342,7 +345,7 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
     '''In this phase, the user is tested on his ability to generalize his knowledge of aliens and contexts by being presented with an alien and
     2 contexts, and determining which context the alien is most likely to belong in, or neither.'''
     '''Draws alien and buttons.'''
-    stim_list = get_aliens(IMAGES_MAP_PATH, procedure, window)
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
     draw_alien(stim_list)
     draw_buttons_and_text(general_buttons, button_text, NUM_GENERAL_BUTTONS)
     
@@ -376,10 +379,10 @@ def import_non_studied_contexts():
 def main():
 
 
-    '''First, we read information from CSV files to get images in each trial'''
-    '''Then, we get the images and store them for each trial type'''
-    '''We run the experiment and get the response time + accuracy'''
-    '''Write the results to a file'''
+    '''First, we read information from CSV files for each trial(aliens used, context images, correct answer, etc.)'''
+    '''Then, we pass the information to functions designed to run each trial type'''
+    '''Then, we run the experiment trial and write the results into a file'''
+   
     window = create_window()
     '''Determines visibility of mouse based on input mode'''
     is_visible = False if (INPUT_MODE != 0) else True

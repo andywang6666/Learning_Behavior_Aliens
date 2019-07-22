@@ -1,13 +1,13 @@
 ID,Trial Type,Schedule,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path,Context Path 2,Left/Right,Correct Answer,ResponseTime,Response,Accuracy,Confidence
-0.0,Study,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,nan,0.0,Left,1.4739566933421884,1,0,NA
-1.0,Study,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,NAN,0.0,Left,0.545431466656737,1,0,NA
-2.0,Study,interleaved,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/mountain.jpg,nan,1.0,Right,1.0576174933230504,0,0,NA
-7.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,0.9691165866679512,2.0,0.0,1.0
-8.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,0.37976234665256925,3.0,0.0,0.0
-9.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,0.45847210666397586,1.0,0.0,0.0
-13.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,nan,Middle,2.331735893356381,1,1,NA
-14.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,nan,Left,0.47248085335013457,2,0,NA
-15.0,GeneralTest,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,nan,Right,1.7650167466781568,0,0,NA
-18.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,Studied,0.91109845333267,1,0,NA
-19.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,Tested,0.3055914666620083,2,0,NA
-20.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,New,0.23551061333273537,0,0,NA
+0.0,Study,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,nan,0.0,Left,5,No answer,0,NA
+1.0,Study,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,NAN,0.0,Left,5,No answer,0,NA
+2.0,Study,interleaved,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/mountain.jpg,nan,1.0,Right,5,No answer,0,NA
+7.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,1.2871729974731352,2.0,0.0,1.0
+8.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,1.6772186977200363,1.0,0.0,0.0
+9.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,0.7655877266824973,3.0,0.0,0.0
+13.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,nan,Middle,0.9070511329914552,0,0,NA
+14.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,nan,Left,1.185672027446799,1,0,NA
+15.0,GeneralTest,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,nan,Right,0.37604079955599445,2,1,NA
+18.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,Studied,1.1660393958231907,1,0,NA
+19.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,Tested,0.7179888136583941,2,0,NA
+20.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,New,0.4400471722465227,0,0,NA
