@@ -1,22 +1,15 @@
-﻿ID,Trial Type,Schedule,Context,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Left/Right,Correct Answer
-0,Study,blocked,context_1,2,3,4,1,2,4,2,255,0,Left
-1,Study,blocked,context_2,2,1,2,2,1,1,3,255,0,Left
-2,Study,interleaved,context_3,2,4,1,4,1,2,3,255,1,Right
-3,Study,interleaved,,,,,,,,,,1,Right
-4,Study,interleaved,,,,,,,,,,1,Right
-5,MemoryTest,,,,,,,,,,,NA,Old
-6,MemoryTest,,,,,,,,,,,NA,Old
-7,MemoryTest,,,,,,,,,,,NA,Old
-8,MemoryTest,,,,,,,,,,,NA,Old
-9,MemoryTest,,,,,,,,,,,NA,New
-10,MemoryTest,,,,,,,,,,,NA,New
-11,GeneralTest,,,,,,,,,,,NA,Middle
-12,GeneralTest,,,,,,,,,,,NA,Left
-13,GeneralTest,,,,,,,,,,,NA,Right
-14,GeneralTest,,,,,,,,,,,NA,Left
-15,GeneralTest,,,,,,,,,,,NA,Right
-16,FeatureTest,,,,,,,,,,,NA,Studied
-17,FeatureTest,,,,,,,,,,,NA,Tested
-18,FeatureTest,,,,,,,,,,,NA,New
-19,FeatureTest,,,,,,,,,,,NA,Studied
-20,FeatureTest,,,,,,,,,,,NA,Tested
+﻿ID,Trial Type,Schedule,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer
+0,Study,blocked,2,3,4,1,2,4,2,255,NA,Data/Images/Contexts/ocean.jpg,NA,0,Left
+1,Study,blocked,2,1,2,2,1,1,3,255,NA,Data/Images/Contexts/city.jpg,NAN,0,Left
+2,Study,interleaved,2,4,1,4,1,2,3,255,NA,Data/Images/Contexts/mountain.jpg,NA,1,Right
+7,MemoryTest,blocked,2,3,4,1,2,4,2,255,NA,,,NA,Old
+8,MemoryTest,blocked,2,3,4,1,2,4,2,255,NA,,,NA,Old
+9,MemoryTest,blocked,2,3,4,1,2,4,2,255,NA,,,NA,Old
+13,GeneralTest,blocked,2,3,4,1,2,4,2,255,NA,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,NA,Middle
+14,GeneralTest,blocked,2,3,4,1,2,4,2,255,NA,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,NA,Left
+15,GeneralTest,blocked,2,1,2,2,1,1,3,255,NA,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,NA,Right
+18,FeatureTest,blocked,NA,NA,NA,NA,NA,NA,NA,NA,2_arm_1.png,NA,NA,NA,Studied
+19,FeatureTest,blocked,NA,NA,NA,NA,NA,NA,NA,NA,2_ant_1.png,NA,NA,NA,Tested
+20,FeatureTest,blocked,NA,NA,NA,NA,NA,NA,NA,NA,2_eye_1.png,NA,NA,NA,New
+,FeatureTest,,,,,,,,,,,,,NA,Studied
+,FeatureTest,,,,,,,,,,,,,NA,Tested
