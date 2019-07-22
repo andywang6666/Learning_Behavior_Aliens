@@ -3,13 +3,13 @@ import pandas as pd
 from PIL import Image
 import time
 
-def get_aliens(window, images_map_path, features_path, pos, size):
+def get_aliens(window, images_map_path, features_path, size):
     """
     Params:
     window - window object that is displayed on
     images_map_path - map of feature id to feature path
     features_path - procedure file containing the alien descriptions
-    pos - tuple (x, y) for pixel coordinates alien is located
+    # pos - tuple (x, y) for pixel coordinates alien is located
     size - size ratio respective to original size (<=0.3 recommended)
 
     This function reads in the color for the aliens from the procedure
@@ -31,6 +31,8 @@ def get_aliens(window, images_map_path, features_path, pos, size):
     features_file = features_file[features].astype('int')
 
     aliens = []
+
+    pos = (0, 0)
 
     for index, row in features_file.iterrows():
         body_row = images_file.loc[str(row['Body']) + '_body']
