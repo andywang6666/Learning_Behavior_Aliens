@@ -14,43 +14,43 @@ import math
 '''
 
 
-from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH
+from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH, NON_TESTED_CONTEXTS, INSTRUCTIONS_PATH
 from AlienAssembly import get_aliens
 '''More constant parameters used for the functions.'''
-ALIEN_ALIGN_LEFT_POS = (-0.2, 0.2)
-ALIEN_ALIGN_RIGHT_POS = (0.2, 0.2)
-ALIEN_ALIGN_CENTER_POS = (0, 0.2)
-CONTEXT_ALIGN_CENTER_POS = (0, 0.25)
-CONTEXT_ALIGN_LEFT_POS = (-0.4, 0.25)
-CONTEXT_ALIGN_RIGHT_POS = (0.4, 0.25)
-GENERAL_CONTEXT_ALIGN_LEFT = (-0.4, -0.225)
-GENERAL_CONTEXT_ALIGN_RIGHT = (0.4, -0.225)
-GENERAL_CONTEXT_ALIGN_CENTER = (0, -0.225)
+ALIEN_ALIGN_LEFT_POS = (-0.2, 0.1)
+ALIEN_ALIGN_RIGHT_POS = (0.2, 0.1)
+ALIEN_ALIGN_CENTER_POS = (0, 0.1)
+GENERAL_ALIEN_ALIGN_CENTER = (0, 0.2)
+CONTEXT_ALIGN_CENTER_POS = (0, 0.1)
+CONTEXT_ALIGN_LEFT_POS = (-0.4, 0.1)
+CONTEXT_ALIGN_RIGHT_POS = (0.4, 0.1)
+GENERAL_CONTEXT_ALIGN_LEFT = (-0.6, -0.2)
+GENERAL_CONTEXT_ALIGN_RIGHT = (0.6, -0.2)
+GENERAL_CONTEXT_ALIGN_CENTER = (0, -0.2)
 
 FEATURE_ALIGN_CENTER_POS = ALIEN_ALIGN_CENTER_POS
-STUDY_BUTTON_X_POSITIONS = [-0.2, 0.2]
-STUDY_BUTTON_Y_POSITIONS = [-0.2]
-FEATURE_BUTTONS_X_POSITIONS = [-0.3, 0.02, 0.34]
-FEATURE_BUTTONS_Y_POSITIONS = [-0.2]
-MEMORY_BUTTONS_X_POSITIONS = [-0.5, -0.18, 0.14, 0.46]
-MEMORY_BUTTONS_Y_POSITIONS = [-0.2]
-GENERAL_BUTTONS_X_POSITIONS = [-0.4, 0, 0.4]
+FEATURE_BUTTONS_X_POSITIONS = [-0.5, 0, 0.5]
+FEATURE_BUTTONS_Y_POSITIONS = [-0.3]
+MEMORY_BUTTONS_X_POSITIONS = [-0.6, -0.2, 0.2, 0.6]
+MEMORY_BUTTONS_Y_POSITIONS = [-0.3]
+GENERAL_BUTTONS_X_POSITIONS = [-0.6, 0, 0.6]
 GENERAL_BUTTONS_Y_POSITIONS = [-0.425]
 NUM_STUDY_BUTTONS = 2
 NUM_MEMORY_BUTTONS = 4
 NUM_FEATURE_BUTTONS = 3
 NUM_GENERAL_BUTTONS = 3
 NUM_FEATURES = 8
-ALIEN_SIZE = [0.15, 0.3]
-CONTEXT_SIZE = [0.9, 0.7]
-REDUCED_CONTEXT_SIZE = [0.3, 0.3]
-FEATURE_SIZE = [0.05, 0.05]
+ALIEN_SIZE = 0.3
+REDUCED_ALIEN_SIZE = 0.2
+CONTEXT_SIZE = [1.1, 0.7]
+REDUCED_CONTEXT_SIZE = [0.45, 0.3]
+FEATURE_SIZE = [0.35, 0.3]
 
 def create_window():
     experiment_monitor = monitors.Monitor('expMonitor', distance=SCREENDISTANCE, width = SCREENWIDTH)
     experiment_monitor.setSizePix((EXPHRES, EXPVRES))
     experiment_monitor.saveMon()
-    window = visual.Window([HRES, VRES], allowGUI = True, monitor = experiment_monitor, units = 'height', color = 'white', fullScr = True, screen=0)
+    window = visual.Window([HRES, VRES], allowGUI = True, monitor = experiment_monitor, units = 'height', color = 'white', fullscr = True, screen=0)
 
     return window
 
@@ -100,39 +100,36 @@ def create_buttons_from_dimensions(window, x_pos_array, y_pos_array, num_buttons
 
     '''Creates the buttons in the window from dimensions.'''
     for i in range (num_buttons):
-        button_array.append(visual.Rect(window, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = 0.2, height = 0.05, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
+        button_array.append(visual.Rect(window, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = 0.3, height = 0.1, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
     return button_array
 
 
 def create_buttons(window):
     '''Creates buttons for all 4 different types of phases. Does this calling detailed button creation functions.'''
-    study_buttons = create_buttons_from_dimensions(window, STUDY_BUTTON_X_POSITIONS, STUDY_BUTTON_Y_POSITIONS, NUM_STUDY_BUTTONS, False)
     memory_buttons = create_buttons_from_dimensions(window, MEMORY_BUTTONS_X_POSITIONS, MEMORY_BUTTONS_Y_POSITIONS, NUM_MEMORY_BUTTONS, True)
     feature_buttons = create_buttons_from_dimensions(window, FEATURE_BUTTONS_X_POSITIONS, FEATURE_BUTTONS_Y_POSITIONS, NUM_FEATURE_BUTTONS, False)
     general_buttons = create_buttons_from_dimensions(window, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS, False)
-    return study_buttons, memory_buttons, feature_buttons, general_buttons
+    return memory_buttons, feature_buttons, general_buttons
 
 def button_text_from_dimensions(window, text_content, x_pos_array, y_pos_array, num_buttons):
     '''Handles detailed functions of creating text on buttons using dimension parameters.'''
     text_array = []
     for i in range(num_buttons):
-        text_array.append(visual.TextStim(window, pos = [x_pos_array[i], y_pos_array[0]], text = text_content[i], color='black', height = 0.025))
+        text_array.append(visual.TextStim(window, pos = [x_pos_array[i], y_pos_array[0]], text = text_content[i], color='black', height = 0.04))
     return text_array
 
 def create_buttons_text(window):
     '''Creates text on buttons used for all 4 phases of the experiment.'''
     '''Text content contains what will be displayed on the buttons for each trial, with the number of entries in each list for each phase
     corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.''' 
-    study_text_content = ["Left", "Right"]
     memory_text_content = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
     feature_text_content = ["Studied", "Tested", "New"]
     general_text_content = ["Left Context", "Middle Context", "Right Context"]
 
-    study_button_text = button_text_from_dimensions(window, study_text_content, STUDY_BUTTON_X_POSITIONS, STUDY_BUTTON_Y_POSITIONS, NUM_STUDY_BUTTONS)
     memory_button_text = button_text_from_dimensions(window, memory_text_content, MEMORY_BUTTONS_X_POSITIONS, MEMORY_BUTTONS_Y_POSITIONS, NUM_MEMORY_BUTTONS)
     feature_button_text = button_text_from_dimensions(window, feature_text_content, FEATURE_BUTTONS_X_POSITIONS, FEATURE_BUTTONS_Y_POSITIONS, NUM_FEATURE_BUTTONS)
     general_button_text = button_text_from_dimensions(window, general_text_content, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS)
-    return study_button_text, memory_button_text, feature_button_text, general_button_text
+    return memory_button_text, feature_button_text, general_button_text
 
 
 
@@ -150,7 +147,7 @@ def draw_alien(stim_list):
     for stim in stim_list:
         stim.draw()
 
-def get_response(window, mouse, button_array, clock, wait_time, num_options):
+def get_response(window, mouse, button_array, clock, wait_time, num_options, input_mode):
     '''Depending on the input mode(mouse, MRI buttons, etc.), gets a response from the user under the timed conditions(wait_time), and returns
         the response as well as the response time.'''
 
@@ -158,7 +155,7 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
     response_time = wait_time
     response = 'No answer'
 
-    if INPUT_MODE == 0:
+    if input_mode == 0:
         '''Mouse input'''
         if wait_time < 0:
             start_time = clock.getTime()
@@ -186,15 +183,16 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
 
 
 
-    elif INPUT_MODE == 1 or INPUT_MODE == 2:
+    elif input_mode == 1 or input_mode == 2 or input_mode == 3:
         '''Key input'''
         start_time = clock.getTime()
         '''Only difference between 2 input modes is that they use different keys.'''
-        if INPUT_MODE == 1:
-             keys = ['q', '1', '2', '3', '6', '7', '8']
+        if input_mode == 1:
+             keys = ['q', '1', '2', '3', '4']
+        elif input_mode == 2:
+             keys = ['q', 'd', 'f', 'j', 'k']
         else:
-             keys = ['q', 's', 'd', 'f', 'j', 'k', 'l']
-        
+             keys = ['q', 'left', 'right']
         
         '''Gets response when one of the keys above is pressed. If the key pressed is 'q', the experiment ends. Otherwise, the appropriate response is collected.'''
         
@@ -256,8 +254,16 @@ def draw_buttons_and_text(button_array, text_array, num_buttons):
         button_array[i].draw()
         text_array[i].draw()
 
+def instruction_procedure(window, mouse, clock, procedure):
+    instruction_path = procedure['Instruction Path']
+    image = visual.ImageStim(window, image = FILEPATH + INSTRUCTIONS_PATH + instruction_path, size = image_size, pos = (0, 0))
+    image.draw()
+    window.flip(clearBuffer=False)
+    response_time, response = get_response(window, mouse, "None", clock, -2, 2)
+    window.flip()
 
-def study_procedure(window, mouse, clock, procedure, study_buttons, button_text):
+
+def study_procedure(window, mouse, clock, procedure):
     '''In the study phase, the user sees the context for 1 second, before seeing the alien in the context for another second, and must
     answer which side the alien is on using the buttons. If they are correct, they will study the alien in its context for 4 more seconds.
     Otherwise, nothing happens.'''
@@ -270,20 +276,20 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
     window.flip(clearBuffer=False)
     
     '''1 second delay'''
-    delay(clock, 1)
+    delay(clock, 1.5)
     
     '''Draws alien in context, along with buttons.'''
     alien_position = ALIEN_ALIGN_RIGHT_POS if (int(procedure['Left/Right']) == 1) else ALIEN_ALIGN_LEFT_POS
-    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, alien_position, 0.2)
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, alien_position, ALIEN_SIZE)
+    stim_list_correct = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, ALIEN_SIZE)
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(stim_list)
-    draw_buttons_and_text(study_buttons, button_text, NUM_STUDY_BUTTONS)
     window.flip(clearBuffer=False)
 
     
     '''User must answer the side the alien is displayed on within a few seconds.'''
     possible_answers = ["Left", "Right"]
-    response_time, response = get_response(window, mouse, study_buttons, clock, 5, 2)
+    response_time, response = get_response(window, mouse, "NA", clock, 5, 2, 3)
     accuracy = 0
     
     '''If the response is incorrect, display an appropriate error message.'''
@@ -295,8 +301,7 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
         '''If the user answers correctly, display the alien and context for 4 more seconds.'''
         accuracy = 1
         draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
-        stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
-        draw_alien(stim_list)
+        draw_alien(stim_list_correct)
         window.flip(clearBuffer=False)
         delay(clock, 4)
     
@@ -308,11 +313,11 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     encountered in the study phase. Additionally, he also answers whether or not he is sure or unsure about his answer.'''
 
     '''Draws alien and buttons on screen.'''
-    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, ALIEN_SIZE)
     draw_alien(stim_list)
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
     window.flip(clearBuffer=False)
-    response_time, response = get_response(window, mouse, memory_buttons, clock, -1, 4)
+    response_time, response = get_response(window, mouse, memory_buttons, clock, -1, 4, INPUT_MODE)
 
     accuracy = 1 if (response < 2 and procedure[13] == "New") or (response >= 2 and procedure[13] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
@@ -334,7 +339,7 @@ def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_t
     window.flip(clearBuffer=False)
     '''Gets response and records it.'''
     possible_answers = ["Studied, Tested, New"]
-    response_time, response = get_response(window, mouse, feature_buttons, clock, -1, 3)
+    response_time, response = get_response(window, mouse, feature_buttons, clock, -1, 3, INPUT_MODE)
     accuracy = 1 if procedure[13] == int(response) else 0
     
     post_procedure(window, procedure, response_time, response, accuracy, "NA")
@@ -345,7 +350,7 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
     '''In this phase, the user is tested on his ability to generalize his knowledge of aliens and contexts by being presented with an alien and
     2 contexts, and determining which context the alien is most likely to belong in, or neither.'''
     '''Draws alien and buttons.'''
-    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
+    stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, GENERAL_ALIEN_ALIGN_CENTER, REDUCED_ALIEN_SIZE)
     draw_alien(stim_list)
     draw_buttons_and_text(general_buttons, button_text, NUM_GENERAL_BUTTONS)
     
@@ -362,14 +367,14 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
 
     window.flip(clearBuffer=False)
 
-    response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3)
+    response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE)
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
     
     post_procedure(window, procedure, response_time, response, accuracy, "NA")
 
 def import_non_studied_contexts():
     '''For the general test, the program pulls contexts that haven't been studied by the user to be tested.'''
-    new_context_list = ["fire", "grassland", "desert"]
+    new_context_list = NON_TESTED_CONTEXTS
     context_path_list = []
     for context in new_context_list:
         context_path_list.append("Data/Images/Contexts/" + context + ".jpg")
@@ -397,15 +402,15 @@ def main():
 
     new_contexts = import_non_studied_contexts()
     
-    study_buttons, memory_buttons, feature_buttons, general_buttons = create_buttons(window)
+    memory_buttons, feature_buttons, general_buttons = create_buttons(window)
 
-    study_button_text, memory_button_text, feature_button_text, general_button_text = create_buttons_text(window)
+    memory_button_text, feature_button_text, general_button_text = create_buttons_text(window)
 
     for index, procedure in procedural_file_list.iterrows():
         if procedure['Trial Type'] == 'Instruct':
-            instruction_procedure(window, mouse, procedure, "")
+            instruction_procedure(window, mouse, clock, procedure)
         elif procedure['Trial Type'] == 'Study':
-            study_procedure(window, mouse, clock,  procedure, study_buttons, study_button_text)
+            study_procedure(window, mouse, clock,  procedure)
         elif procedure['Trial Type'] == 'MemoryTest':
             memory_procedure(window, mouse, clock, procedure, memory_buttons, memory_button_text)
         elif procedure['Trial Type'] == 'FeatureTest':

@@ -1,4 +1,4 @@
-CONDITION = 0
+CONDITION = 1
 
 SUBJECT_ID = '001'
 
@@ -13,9 +13,12 @@ SCREENWIDTH = 30
 
 FILEPATH = ''
 PROCEDURE_PATH = 'Data/Procedures/'
-FEATURE_PATH = 'Data/Images/Features_Placed/'
+FEATURE_PATH = 'Data/Images/feature_only/'
 RESULTS_PATH = 'Data/Results/'
 IMAGES_MAP_PATH = 'Data/imagemap.xlsx'
+INSTRUCTIONS_PATH = 'Data/Images/Instructions/'
+
+NON_TESTED_CONTEXTS = ["fire", "grassland", "desert"]
 
 INPUT_MODE = 0
 
