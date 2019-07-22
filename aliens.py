@@ -1,4 +1,4 @@
-from psychopy import visual, core, event, monitors 
+from psychopy import visual, core, event, monitors
 import csv
 import random
 import os
@@ -122,7 +122,7 @@ def button_text_from_dimensions(window, text_content, x_pos_array, y_pos_array, 
 def create_buttons_text(window):
     '''Creates text on buttons used for all 4 phases of the experiment.'''
     '''Text content contains what will be displayed on the buttons for each trial, with the number of entries in each list for each phase
-    corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.''' 
+    corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.'''
     study_text_content = ["Left", "Right"]
     memory_text_content = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
     feature_text_content = ["Studied", "Tested", "New"]
@@ -181,7 +181,7 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
                         response_time = clock.getTime() - start_time
                         response = i
                         return response_time, response
-            
+
             return wait_time, 'No answer'
 
 
@@ -194,10 +194,10 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
              keys = ['q', '1', '2', '3', '6', '7', '8']
         else:
              keys = ['q', 's', 'd', 'f', 'j', 'k', 'l']
-        
-        
+
+
         '''Gets response when one of the keys above is pressed. If the key pressed is 'q', the experiment ends. Otherwise, the appropriate response is collected.'''
-        
+
         if wait_time < 0:
             selection = event.waitKeys(keyList = keys[0:num_options + 1], timeStamped=clock)
             if selection[0][0] == 'q':
@@ -207,8 +207,8 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options):
                 if selection[0][0] == keys[i]:
                     response = i - 1
                     return selection[0][1] - start_time, response
-        
-        
+
+
         else:
             selection = event.waitKeys(maxWait=wait_time, keyList = keys[0:num_options + 1], timeStamped=clock)
             if selection is None:
@@ -261,17 +261,17 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
     '''In the study phase, the user sees the context for 1 second, before seeing the alien in the context for another second, and must
     answer which side the alien is on using the buttons. If they are correct, they will study the alien in its context for 4 more seconds.
     Otherwise, nothing happens.'''
-    
-    
+
+
     context_path = procedure['Context Path 1']
 
     '''Draws context'''
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
-    
+
     '''1 second delay'''
     delay(clock, 1)
-    
+
     '''Draws alien in context, along with buttons.'''
     alien_position = ALIEN_ALIGN_RIGHT_POS if (int(procedure['Left/Right']) == 1) else ALIEN_ALIGN_LEFT_POS
     stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, alien_position, 0.2)
@@ -280,12 +280,12 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
     draw_buttons_and_text(study_buttons, button_text, NUM_STUDY_BUTTONS)
     window.flip(clearBuffer=False)
 
-    
+
     '''User must answer the side the alien is displayed on within a few seconds.'''
     possible_answers = ["Left", "Right"]
     response_time, response = get_response(window, mouse, study_buttons, clock, 5, 2)
     accuracy = 0
-    
+
     '''If the response is incorrect, display an appropriate error message.'''
     if response == "No answer" or procedure['Correct Answer'] != possible_answers[int(response)]:
         accuracy = 0
@@ -299,9 +299,9 @@ def study_procedure(window, mouse, clock, procedure, study_buttons, button_text)
         draw_alien(stim_list)
         window.flip(clearBuffer=False)
         delay(clock, 4)
-    
+
     post_procedure(window, procedure, response_time, response, accuracy, "NA")
-    
+
 
 def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_text):
     '''In this phase, the user is tested on his memory by being presented with an alien, and then answering whether or not that alien was
@@ -317,7 +317,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     accuracy = 1 if (response < 2 and procedure[13] == "New") or (response >= 2 and procedure[13] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
     post_procedure(window, procedure, response_time, response, accuracy, confidence)
-    
+
 
 
 def draw_feature(window, feature_position, feature_path):
@@ -336,9 +336,9 @@ def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_t
     possible_answers = ["Studied, Tested, New"]
     response_time, response = get_response(window, mouse, feature_buttons, clock, -1, 3)
     accuracy = 1 if procedure[13] == int(response) else 0
-    
+
     post_procedure(window, procedure, response_time, response, accuracy, "NA")
-  
+
 
 
 def general_procedure(window, mouse, clock, procedure, general_buttons, button_text, new_context_list):
@@ -348,13 +348,13 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
     stim_list = get_aliens(window, IMAGES_MAP_PATH, procedure, ALIEN_ALIGN_CENTER_POS, 0.2)
     draw_alien(stim_list)
     draw_buttons_and_text(general_buttons, button_text, NUM_GENERAL_BUTTONS)
-    
+
     '''Picks contexts to be used from the file.'''
     context_path_1 = procedure['Context Path 1']
     context_path_2 = procedure['Context Path 2']
-    
+
     chosen_context = new_context_list[random.randint(0, len(new_context_list) - 1)]
-    
+
     possible_answers = ["Left", "Middle", "Right"]
     draw_context(window, GENERAL_CONTEXT_ALIGN_LEFT, context_path_1, REDUCED_CONTEXT_SIZE)
     draw_context(window, GENERAL_CONTEXT_ALIGN_CENTER, context_path_2, REDUCED_CONTEXT_SIZE)
@@ -364,7 +364,7 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
 
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3)
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
-    
+
     post_procedure(window, procedure, response_time, response, accuracy, "NA")
 
 def import_non_studied_contexts():
@@ -382,12 +382,12 @@ def main():
     '''First, we read information from CSV files for each trial(aliens used, context images, correct answer, etc.)'''
     '''Then, we pass the information to functions designed to run each trial type'''
     '''Then, we run the experiment trial and write the results into a file'''
-   
+
     window = create_window()
     '''Determines visibility of mouse based on input mode'''
     is_visible = False if (INPUT_MODE != 0) else True
     mouse = event.Mouse(visible=is_visible,  newPos = None, win=window)
-    
+
     '''Starts the clock'''
     clock = core.Clock()
 
@@ -396,7 +396,7 @@ def main():
     new_session = create_results_file()
 
     new_contexts = import_non_studied_contexts()
-    
+
     study_buttons, memory_buttons, feature_buttons, general_buttons = create_buttons(window)
 
     study_button_text, memory_button_text, feature_button_text, general_button_text = create_buttons_text(window)
