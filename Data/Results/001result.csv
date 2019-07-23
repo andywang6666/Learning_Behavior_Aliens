@@ -1,13 +1,16 @@
-ID,Trial Type,Schedule,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path,Context Path 2,Left/Right,Correct Answer,ResponseTime,Response,Accuracy,Confidence
-0.0,Study,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/basketball_005.jpg,nan,0.0,Left,0.5565066425588157,0,1,NA
-1.0,Study,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/desert_001.jpg,NAN,0.0,Left,0.4868145122927672,1,0,NA
-2.0,Study,interleaved,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/snow_021.jpg,nan,1.0,Right,0.7753477225160168,1,1,NA
-7.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,1.5671413046839007,1.0,0.0,0.0
-8.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,0.7254089704911166,2.0,0.0,1.0
-9.0,MemoryTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,2.046753686718148,3.0,0.0,0.0
-13.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,nan,Middle,0.8721481078828219,1,1,NA
-14.0,GeneralTest,blocked,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,nan,Left,1.3069122957203945,2,0,NA
-15.0,GeneralTest,blocked,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,nan,Right,2.9771750497384346,0,0,NA
-18.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,Studied,2.068287970862002,1,0,NA
-19.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,Tested,0.7332306204880297,2,0,NA
-20.0,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,New,0.7721148705641099,0,0,NA
+ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,ResponseTime,Response,Accuracy,Confidence
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
+1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/basketball_005.jpg,nan,0.0,Left,BF,0.8205577298940625,0,1,NA,0.6913469050341519,0.5747726614208659
+1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/desert_001.jpg,NAN,0.0,Left,BF,0.30810952188039664,0,1,NA,0.1753117118641967,0.5689371439220849
+1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/snow_021.jpg,nan,1.0,Right,IF,0.40467012068256736,1,1,NA,0.13313615652441513,0.5735182619682746
+1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,4.233397660413175,1,0,0,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,0.771766710706288,2,0,1,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,1.19763234234415,2,0,1,NA,NA
+1,Instruct,nan,D1GR.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
+1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,nan,Middle,BF,6.818155597575242,1,1,NA,NA,NA
+1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,nan,Left,BF,0.7125961759593338,2,0,NA,NA,NA
+1,GeneralTest,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,nan,Right,BF,0.3102774142753333,0,0,NA,NA,NA
+1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,Studied,nan,4.464911161645432,1,0,NA,NA,NA
+1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,Tested,nan,0.22833782258385327,2,0,NA,NA,NA
+1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,New,nan,0.23261899407953024,0,0,NA,NA,NA

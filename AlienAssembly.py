@@ -3,7 +3,10 @@ import pandas as pd
 from PIL import Image
 import time
 
-def get_aliens(window, images_map_path, features_path, size):
+ALIEN_SIZE = 0.3
+REDUCED_ALIEN_SIZE = 0.2
+
+def get_aliens(window, images_map_path, features_path):
     """
     Params:
     window - window object that is displayed on
@@ -28,13 +31,33 @@ def get_aliens(window, images_map_path, features_path, size):
     features = ['Body', 'Arms', 'Legs', 'Eyes', 'Mouth', 'Antenna', 'Tail', 'Color']
     features_file = pd.read_csv(features_path)
     features_file = features_file.loc[features_file['Trial Type'] != 'FeatureTest']
+    features_file = features_file.loc[features_file['Trial Type'] != 'Instruct']
+    trial_type = features_file['Trial Type']
     features_file = features_file[features].astype('int')
+    
 
     aliens = []
 
     pos = (0, 0)
 
+    size = 0
+
+    trial_type_list = []
+    trial_type_list_index = 0
+
+    for index, value in trial_type.items():
+        trial_type_list.append(str(value))
+
+
     for index, row in features_file.iterrows():
+        
+        if trial_type_list[trial_type_list_index] == 'GeneralTest':
+            size = REDUCED_ALIEN_SIZE
+        else:
+            size = ALIEN_SIZE
+        trial_type_list_index += 1
+        
+
         body_row = images_file.loc[str(row['Body']) + '_body']
         path_col = images_file['Image Path']
 
