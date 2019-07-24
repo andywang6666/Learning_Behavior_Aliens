@@ -69,7 +69,7 @@ def create_results_file():
 
     with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
-        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Body", "Arms", "Legs", "Eyes", "Mouth", "Antenna", "Tail", "Color", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "ResponseTime", "Response", "Accuracy", "Confidence"])
+        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Body", "Arms", "Legs", "Eyes", "Mouth", "Antenna", "Tail", "Color", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
     return 1
 
@@ -141,7 +141,7 @@ def create_buttons_text(window):
     '''Creates text on buttons used for all 4 phases of the experiment.'''
     '''Text content contains what will be displayed on the buttons for each trial, with the number of entries in each list for each phase
     corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.''' 
-    memory_text_content = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
+    memory_text_content = ["1 - Sure, new", "2 - Unsure, new", "3 - Sure, old", "4 - Unsure, old"]
     feature_text_content = ["Studied", "Tested", "New"]
     general_text_content = ["Left Context", "Middle Context", "Right Context"]
 
@@ -241,11 +241,11 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options, inp
             return selection[0][1] - start_time, response
 
 
-def record_procedure(procedure, response_time, response, accuracy, confidence, context_delay, alien_delay):
+def record_procedure(procedure, results):
     '''Records the results for each phase, which are the parameters to the function, in the appropriate CSV file.'''
     '''result_row = procedure.to_list().extend((response_time, response, accuracy, confidence))'''
     with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'a', newline='') as procedure_file:
-        result_row = procedure.append(pd.Series([response_time, response, accuracy, confidence, context_delay, alien_delay]))
+        result_row = procedure.append(pd.Series(results))
         procedure_csv_writer = csv.writer(procedure_file, delimiter=',')
         procedure_csv_writer.writerow(result_row)
 
@@ -256,9 +256,9 @@ def display_incorrect_message(window):
     incorrect_message.draw()
     window.flip(clearBuffer=False)
 
-def post_procedure(window, procedure, response_time, response, accuracy, confidence, context_delay, alien_delay):
+def post_procedure(window, procedure, results):
     '''After every trial, the results are written to the result file and the screen is cleared.'''
-    record_procedure(procedure, response_time, response, accuracy, confidence, context_delay, alien_delay)
+    record_procedure(procedure, results)
     window.flip()
     window.flip()
     core.wait(0.5)
@@ -282,16 +282,19 @@ def instruction_procedure(window, mouse, clock, procedure):
     image.draw()
     window.flip(clearBuffer=False)
     response_time, response = get_response(window, mouse, "None", clock, -2, 6, 1)
-    post_procedure(window, procedure, "NA", "NA", "NA", "NA", "NA", "NA")
+    results = ["NA", "NA", "NA", "NA", "NA", "NA"]
+    post_procedure(window, procedure, results)
     window.flip()
 
 
 def study_procedure(window, mouse, clock, procedure):
-    '''In the study phase, the user sees the context for 1 second, before seeing the alien in the context for another second, and must
-    answer which side the alien is on using the buttons. If they are correct, they will study the alien in its context for 4 more seconds.
+    '''In the study phase, the user sees the context for 1.5 second, before seeing the alien flash in the context within the next second, and must
+    answer which side the alien is on using the buttons within 2 seconds. If they are correct, they will study the alien in its context for 4 more seconds.
     Otherwise, nothing happens.'''
     global current_alien_index
     procedure_start_time = clock.getTime()
+    '''Determines a random time within a 1 second window an alien will flash'''
+    alien_onset = random.random() 
 
     current_alien = alien_list[current_alien_index]
     context_path = procedure['Context Path 1']
@@ -303,7 +306,7 @@ def study_procedure(window, mouse, clock, procedure):
     context_start_time = clock.getTime()
 
     '''1 second delay'''
-    delay(clock, 0.5)
+    delay(clock, 1.5 + alien_onset)
     
     '''Draws alien in context, along with buttons.'''
     possible_answers = ["Left", "Right"]
@@ -311,16 +314,16 @@ def study_procedure(window, mouse, clock, procedure):
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(window, current_alien, alien_position)
     window.flip(clearBuffer=False)
-
     alien_start_time = clock.getTime()
 
+    delay(clock, 1)
+
+    draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+    window.flip(clearBuffer=False)
 
     '''User must answer the side the alien is displayed on within a few seconds.'''
-    response_time, response = get_response(window, mouse, "NA", clock, 1, 2, 3)
+    response_time, response = get_response(window, mouse, "NA", clock, 2, 2, 3)
     accuracy = 0
-
-    context_delay = context_start_time - procedure_start_time
-    alien_delay = alien_start_time - context_start_time
 
 
     '''If the response is incorrect, display an appropriate error message.'''
@@ -336,7 +339,9 @@ def study_procedure(window, mouse, clock, procedure):
         window.flip(clearBuffer=False)
         delay(clock, 4)
 
-    post_procedure(window, procedure, response_time, response, accuracy, "NA", context_delay, alien_delay)
+    recorded_response = response if response == "No answer" else possible_answers[int(response)]
+    results = [response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
+    post_procedure(window, procedure, results)
     current_alien_index += 1
     
 
@@ -352,10 +357,12 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
     window.flip(clearBuffer=False)
     response_time, response = get_response(window, mouse, memory_buttons, clock, -1, 4, INPUT_MODE)
+    possible_answers = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
 
-    accuracy = 1 if (response < 2 and procedure[13] == "New") or (response >= 2 and procedure[13] == "Old") else 0
+    accuracy = 1 if (response < 2 and procedure['Correct Answer'] == "New") or (response >= 2 and procedure['Correct Answer'] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
-    post_procedure(window, procedure, response_time, response, accuracy, confidence, "NA", "NA")
+    results = [response_time, possible_answers[int(response)], accuracy, confidence, "NA", "NA"]
+    post_procedure(window, procedure, results)
     current_alien_index += 1
 
 
@@ -367,7 +374,7 @@ def draw_feature(window, feature_position, feature_path):
 
 def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_text):
     '''Gets feature to be tested.'''
-    possible_answers = ["Studied, Tested, New"]
+    possible_answers = ["Studied", "Tested", "New"]
     feature_path = FILEPATH + FEATURE_PATH + procedure['Feature Path']
     '''Draws feature tested along with buttons.'''
     draw_feature(window, FEATURE_ALIGN_CENTER_POS, feature_path)
@@ -375,9 +382,10 @@ def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_t
     window.flip(clearBuffer=False)
     '''Gets response and records it.'''
     response_time, response = get_response(window, mouse, feature_buttons, clock, -1, 3, INPUT_MODE)
-    accuracy = 1 if procedure[13] == int(response) else 0
+    accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    post_procedure(window, procedure, response_time, response, accuracy, "NA", "NA", "NA")
+    results = [response_time, possible_answers[int(response)], accuracy, "NA", "NA", "NA"]
+    post_procedure(window, procedure, results)
 
 
 
@@ -407,7 +415,8 @@ def general_procedure(window, mouse, clock, procedure, general_buttons, button_t
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE)
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    post_procedure(window, procedure, response_time, response, accuracy, "NA", "NA", "NA")
+    results = [response_time, possible_answers[int(response)], accuracy, "NA", "NA", "NA"]
+    post_procedure(window, procedure, results)
 
 def import_non_studied_contexts():
     '''For the general test, the program pulls contexts that haven't been studied by the user to be tested.'''
@@ -424,6 +433,10 @@ def main():
     '''First, we read information from CSV files for each trial(aliens used, context images, correct answer, etc.)'''
     '''Then, we pass the information to functions designed to run each trial type'''
     '''Then, we run the experiment trial and write the results into a file'''
+    
+    '''Starts the clock at 0. This marks the beginning of the experiment.'''
+    clock = core.Clock()
+    clock.reset()
 
     window = create_window()
     '''Determines visibility of mouse based on input mode'''
@@ -435,9 +448,6 @@ def main():
     alien_list = get_aliens(window, IMAGES_MAP_PATH, PROCEDURE_PATH + SUBJECT_ID + "proc.csv")
 
     current_alien_index = 0
-
-    '''Starts the clock'''
-    clock = core.Clock()
 
     procedural_file_list = read_procedural_csv()
 

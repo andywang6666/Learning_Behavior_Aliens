@@ -1,16 +1,9 @@
-ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,ResponseTime,Response,Accuracy,Confidence
+ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,ResponseTime,Response,Accuracy,Confidence,Trial Start,Alien Onset Time
 1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
-1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/basketball_005.jpg,nan,0.0,Left,BF,0.8205577298940625,0,1,NA,0.6913469050341519,0.5747726614208659
-1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/desert_001.jpg,NAN,0.0,Left,BF,0.30810952188039664,0,1,NA,0.1753117118641967,0.5689371439220849
-1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/snow_021.jpg,nan,1.0,Right,IF,0.40467012068256736,1,1,NA,0.13313615652441513,0.5735182619682746
+1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/basketball_005.jpg,nan,0.0,Left,BF,0.31310706640942954,Right,0,NA,49.998255360726034,52.368821175943594
+1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/desert_001.jpg,NAN,0.0,Left,BF,2.0002146132464986,No answer,0,NA,56.71324044233188,59.22461814415874
+1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,Data/Images/Contexts/snow_021.jpg,nan,1.0,Right,IF,0.13939706052769907,Left,0,NA,64.83048796563526,67.15026212253724
 1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,4.233397660413175,1,0,0,NA,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,0.771766710706288,2,0,1,NA,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,1.19763234234415,2,0,1,NA,NA
-1,Instruct,nan,D1GR.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,NA,NA
-1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/ocean.jpg,Data/Images/Contexts/city.jpg,nan,Middle,BF,6.818155597575242,1,1,NA,NA,NA
-1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,Data/Images/Contexts/mountain.jpg,Data/Images/Contexts/ocean.jpg,nan,Left,BF,0.7125961759593338,2,0,NA,NA,NA
-1,GeneralTest,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,Data/Images/Contexts/city.jpg,Data/Images/Contexts/mountain.jpg,nan,Right,BF,0.3102774142753333,0,0,NA,NA,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,Studied,nan,4.464911161645432,1,0,NA,NA,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,Tested,nan,0.22833782258385327,2,0,NA,NA,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,New,nan,0.23261899407953024,0,0,NA,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,2.802745684166439,"Unsure, old",1,0,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,0.27001588480197825,"Sure, old",1,1,NA,NA
+1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,Old,BF,0.314258212572895,"Unsure, new",0,0,NA,NA
