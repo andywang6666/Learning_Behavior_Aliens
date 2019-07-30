@@ -295,9 +295,10 @@ def instruction_procedure(window, mouse, clock, procedure, button_array):
     window.flip(clearBuffer=False)
     
     num_options = 1 if INPUT_MODE == 0 else 4
+    procedure_start_time = datetime.datetime.now()
     response_time, response = get_response(window, mouse, button_array, clock, -2, num_options, INPUT_MODE, [])
     
-    results = ["NA", "NA", "NA", "NA", "NA", "NA"]
+    results = ["NA", "NA", "NA", "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
     window.flip()
 
@@ -322,7 +323,7 @@ def study_procedure(window, mouse, clock, procedure):
     '''Draws context'''
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
-    context_start_time = clock.getTime()
+    context_start_time = datetime.datetime.now()
 
     '''1 second delay'''
     delay(clock, 1.5 + alien_onset)
@@ -333,7 +334,7 @@ def study_procedure(window, mouse, clock, procedure):
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(window, current_alien, alien_position)
     window.flip(clearBuffer=False)
-    alien_start_time = clock.getTime()
+    alien_start_time = datetime.datetime.now()
 
     return_list = []
 
@@ -377,6 +378,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     draw_alien(window, current_alien, ALIEN_ALIGN_CENTER_POS)
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
     window.flip(clearBuffer=False)
+    procedure_start_time = datetime.datetime.now()
 
     response_time, response = get_response(window, mouse, memory_buttons, clock, -1, 4, INPUT_MODE, [])
     possible_answers = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
@@ -384,7 +386,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     accuracy = 1 if (response < 2 and procedure['Correct Answer'] == "New") or (response >= 2 and procedure['Correct Answer'] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
     
-    results = [response_time, possible_answers[int(response)], accuracy, confidence, "NA", "NA"]
+    results = [response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
     current_alien_index += 1
 
@@ -402,11 +404,12 @@ def feature_procedure(window, mouse, clock, procedure, feature_buttons, button_t
     draw_feature(window, FEATURE_ALIGN_CENTER_POS, feature_path)
     draw_buttons_and_text(feature_buttons, button_text, NUM_FEATURE_BUTTONS)
     window.flip(clearBuffer=False)
+    procedure_start_time = datetime.datetime.now()
     '''Gets response and records it.'''
     response_time, response = get_response(window, mouse, feature_buttons, clock, -1, 3, INPUT_MODE, [])
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    results = [response_time, possible_answers[int(response)], accuracy, "NA", "NA", "NA"]
+    results = [response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
 
 
@@ -435,11 +438,12 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     draw_context(window, GENERAL_CONTEXT_ALIGN_RIGHT, context_path_3, REDUCED_CONTEXT_SIZE)
 
     window.flip(clearBuffer=False)
+    procedure_start_time = datetime.datetime.now()
 
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE, [])
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    results = [response_time, possible_answers[int(response)], accuracy, "NA", "NA", "NA"]
+    results = [response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
 
 def main():
