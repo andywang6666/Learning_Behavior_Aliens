@@ -17,8 +17,7 @@ FEATURE_PATH = 'Data/Images/feature_only/'
 RESULTS_PATH = 'Data/Results/'
 IMAGES_MAP_PATH = 'Data/Procedures/imagemap.xlsx'
 INSTRUCTIONS_PATH = 'Data/Images/Instructions/'
-
-NON_TESTED_CONTEXTS = ["fire", "grassland", "desert"]
+CONTEXTS_PATH = 'Data/Images/Contexts/'
 
 INPUT_MODE = 1
 
