@@ -2,9 +2,10 @@ from psychopy import visual
 import pandas as pd
 from PIL import Image
 import time
+from params import SCALE
 
-ALIEN_SIZE = 0.3
-REDUCED_ALIEN_SIZE = 0.2
+ALIEN_SIZE = 0.3 * SCALE
+REDUCED_ALIEN_SIZE = 0.2 * SCALE
 
 def get_aliens(window, images_map_path, features_path):
     """

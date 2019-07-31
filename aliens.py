@@ -7,37 +7,38 @@ import pandas as pd
 import math
 
 
-from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, X_SCALE, Y_SCALE
+from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
 from AlienAssembly import get_aliens
+
 '''More constant parameters used for the functions.'''
-ALIEN_ALIGN_LEFT_POS = (-0.3 * X_SCALE, 0.1 * Y_SCALE)
-ALIEN_ALIGN_RIGHT_POS = (0.3 * X_SCALE, 0.1 * Y_SCALE)
-ALIEN_ALIGN_CENTER_POS = (0, 0.1 * Y_SCALE)
-GENERAL_ALIEN_ALIGN_CENTER = (0, 0.2 * Y_SCALE)
-CONTEXT_ALIGN_CENTER_POS = (0, 0.1 * Y_SCALE)
-CONTEXT_ALIGN_LEFT_POS = (-0.4, 0.1)
-CONTEXT_ALIGN_RIGHT_POS = (0.4, 0.1)
-GENERAL_CONTEXT_ALIGN_LEFT = (-0.6, -0.2)
-GENERAL_CONTEXT_ALIGN_RIGHT = (0.6, -0.2)
-GENERAL_CONTEXT_ALIGN_CENTER = (0, -0.2)
+ALIEN_ALIGN_LEFT_POS = (-0.3 * SCALE, 0.1 * SCALE)
+ALIEN_ALIGN_RIGHT_POS = (0.3 * SCALE, 0.1 * SCALE)
+ALIEN_ALIGN_CENTER_POS = (0, 0.1 * SCALE)
+GENERAL_ALIEN_ALIGN_CENTER = (0, 0.2 * SCALE)
+CONTEXT_ALIGN_CENTER_POS = (0, 0.1 * SCALE)
+CONTEXT_ALIGN_LEFT_POS = (-0.4 * SCALE, 0.1 * SCALE)
+CONTEXT_ALIGN_RIGHT_POS = (0.4 * SCALE, 0.1 * SCALE)
+GENERAL_CONTEXT_ALIGN_LEFT = (-0.6 * SCALE, -0.2 * SCALE)
+GENERAL_CONTEXT_ALIGN_RIGHT = (0.6 * SCALE, -0.2 * SCALE)
+GENERAL_CONTEXT_ALIGN_CENTER = (0, -0.2 * SCALE)
 
 FEATURE_ALIGN_CENTER_POS = ALIEN_ALIGN_CENTER_POS
-FEATURE_BUTTONS_X_POSITIONS = [-0.5, 0, 0.5]
-FEATURE_BUTTONS_Y_POSITIONS = [-0.3]
-MEMORY_BUTTONS_X_POSITIONS = [-0.6 * X_SCALE, -0.2 * X_SCALE, 0.2 * X_SCALE, 0.6 * X_SCALE]
-MEMORY_BUTTONS_Y_POSITIONS = [-0.3 * Y_SCALE]
-GENERAL_BUTTONS_X_POSITIONS = [-0.6, 0, 0.6]
-GENERAL_BUTTONS_Y_POSITIONS = [-0.2]
+FEATURE_BUTTONS_X_POSITIONS = [-0.5 * SCALE, 0, 0.5 * SCALE]
+FEATURE_BUTTONS_Y_POSITIONS = [-0.3 * SCALE]
+MEMORY_BUTTONS_X_POSITIONS = [-0.6 * SCALE, -0.2 * SCALE, 0.2 * SCALE, 0.6 * SCALE]
+MEMORY_BUTTONS_Y_POSITIONS = [-0.3 * SCALE]
+GENERAL_BUTTONS_X_POSITIONS = [-0.6 * SCALE, 0, 0.6 * SCALE]
+GENERAL_BUTTONS_Y_POSITIONS = [-0.2 * SCALE]
 NUM_STUDY_BUTTONS = 2
 NUM_MEMORY_BUTTONS = 4
 NUM_FEATURE_BUTTONS = 3
 NUM_GENERAL_BUTTONS = 3
 NUM_FEATURES = 8
-ALIEN_SIZE = [0.3 * X_SCALE, 0.3 * Y_SCALE]
+ALIEN_SIZE = 0.3
 REDUCED_ALIEN_SIZE = 0.2
-CONTEXT_SIZE = [1.1 * X_SCALE, 0.7 * Y_SCALE]
-REDUCED_CONTEXT_SIZE = [0.45, 0.3]
-FEATURE_SIZE = 0.3
+CONTEXT_SIZE = [1.1 * SCALE, 0.7 * SCALE]
+REDUCED_CONTEXT_SIZE = [0.45 * SCALE, 0.3 * SCALE]
+FEATURE_SIZE = 0.3 * SCALE
 
 '''This index keeps track of the next alien we use when we encounter a trial that involves drawing an alien. We increment it by 1 every time we have a trial type involving an alien.'''
 current_alien_index = 0
@@ -69,7 +70,7 @@ def create_results_file():
 
     with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
-        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Body", "Arms", "Legs", "Eyes", "Mouth", "Antenna", "Tail", "Color", "Feature Path", "Context Path 1", "Context Path 2", "Context Path 3", "Left/Right", "Correct Answer", "Order", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
+        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Body", "Arms", "Legs", "Eyes", "Mouth", "Antenna", "Tail", "Color", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
     return 1
 
@@ -119,23 +120,23 @@ def create_buttons_from_dimensions(window, x_pos_array, y_pos_array, num_buttons
 
     '''Creates the buttons in the window from dimensions.'''
     for i in range (num_buttons):
-        button_array.append(visual.Rect(window, opacity = opaqueness, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = width * X_SCALE, height = height * Y_SCALE, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
+        button_array.append(visual.Rect(window, opacity = opaqueness, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = width, height = height, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
     return button_array
 
 
 def create_buttons(window):
     '''Creates buttons for all 4 different types of phases. Does this calling detailed button creation functions.'''
-    instruction_buttons = create_buttons_from_dimensions(window, [0], [0], 1, False, 0, 1.91, 0.8)
-    memory_buttons = create_buttons_from_dimensions(window, MEMORY_BUTTONS_X_POSITIONS, MEMORY_BUTTONS_Y_POSITIONS, NUM_MEMORY_BUTTONS, True, 1, 0.3, 0.1)
-    feature_buttons = create_buttons_from_dimensions(window, FEATURE_BUTTONS_X_POSITIONS, FEATURE_BUTTONS_Y_POSITIONS, NUM_FEATURE_BUTTONS, False, 1, 0.3, 0.1)
-    general_buttons = create_buttons_from_dimensions(window, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS, False, 0, 0.45, 0.3)
+    instruction_buttons = create_buttons_from_dimensions(window, [0], [0], 1, False, 0, 2, 1)
+    memory_buttons = create_buttons_from_dimensions(window, MEMORY_BUTTONS_X_POSITIONS, MEMORY_BUTTONS_Y_POSITIONS, NUM_MEMORY_BUTTONS, True, 1, 0.3 * SCALE, 0.1 * SCALE)
+    feature_buttons = create_buttons_from_dimensions(window, FEATURE_BUTTONS_X_POSITIONS, FEATURE_BUTTONS_Y_POSITIONS, NUM_FEATURE_BUTTONS, False, 1, 0.3 * SCALE, 0.1 * SCALE)
+    general_buttons = create_buttons_from_dimensions(window, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS, False, 0, 0.45 * SCALE, 0.3 * SCALE)
     return instruction_buttons, memory_buttons, feature_buttons, general_buttons
 
 def button_text_from_dimensions(window, text_content, x_pos_array, y_pos_array, num_buttons):
     '''Handles detailed functions of creating text on buttons using dimension parameters.'''
     text_array = []
     for i in range(num_buttons):
-        text_array.append(visual.TextStim(window, pos = [x_pos_array[i], y_pos_array[0]], text = text_content[i], color='black', height = 0.04 * Y_SCALE))
+        text_array.append(visual.TextStim(window, pos = [x_pos_array[i], y_pos_array[0]], text = text_content[i], color='black', height = 0.04 * SCALE))
     return text_array
 
 def create_buttons_text(window):

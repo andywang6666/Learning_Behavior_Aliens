@@ -19,9 +19,8 @@ IMAGES_MAP_PATH = 'Data/Procedures/imagemap.xlsx'
 INSTRUCTIONS_PATH = 'Data/Images/Instructions/'
 CONTEXTS_PATH = 'Data/Images/Contexts/'
 
-X_SCALE = 0.666
-Y_SCALE = 0.888
+SCALE = 1
 
-INPUT_MODE = 1
+INPUT_MODE = 0
 
 OFFSET = 0
