@@ -1,5 +1,6 @@
 from psychopy import visual
 import pandas as pd
+from numpy.random import randint
 from PIL import Image
 import time
 from params import SCALE
@@ -67,9 +68,12 @@ def get_aliens(window, images_map_path, features_path):
         body = visual.ImageStim(window, image=path, pos=pos)
         body.size *= size
 
-        # Skin
+        # Skin and Color
         path = path_col.loc[str(row['Body']) + '_skin']
-        skin = visual.ImageStim(window, image=path, pos=pos, color=row['Color'], colorSpace='rgb255')
+        # If color is 255, then randomly change the color of the alien slightly. Else color is set to given number.
+        rand = randint(0, 80, size=(1, 3))
+        color = row['Color'] if row['Color'] != 255 else tuple(*(255 - rand))
+        skin = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
         skin.size *= size
 
         base_id = str(row['Body']) + '_{}_{}'
