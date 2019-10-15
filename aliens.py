@@ -44,6 +44,7 @@ FEATURE_SIZE = 0.3 * SCALE
 current_alien_index = 0
 '''This is the alien list keeping track of aliens used in the experiment, appearing in the same order as the trials they are in.'''
 alien_list = []
+alien_names = []
 
 def start_clock():
     clock = core.Clock()
@@ -70,7 +71,7 @@ def create_results_file():
 
     with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
-        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Body", "Arms", "Legs", "Eyes", "Mouth", "Antenna", "Tail", "Color", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
+        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Alien", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "Alien Name", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
     return 1
 
@@ -142,7 +143,7 @@ def button_text_from_dimensions(window, text_content, x_pos_array, y_pos_array, 
 def create_buttons_text(window):
     '''Creates text on buttons used for all 4 phases of the experiment.'''
     '''Text content contains what will be displayed on the buttons for each trial, with the number of entries in each list for each phase
-    corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.''' 
+    corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.'''
     memory_text_content = ["1 - Sure,\n   new", "2 - Unsure,\n     new", "3 - Sure,\n    old", "4 - Unsure,\n      old"]
     feature_text_content = ["Studied", "Tested", "New"]
     general_text_content = ["Left Context", "Middle Context", "Right Context"]
@@ -218,7 +219,7 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options, inp
              keys = ['q', 'd', 'f', 'j', 'k']
         else:
              keys = ['q', 'left', 'right']
-        
+
         '''Gets response when one of the keys above is pressed. If the key pressed is 'q', the experiment ends. Otherwise, the appropriate response is collected.'''
 
         if wait_time < 0:
@@ -278,7 +279,7 @@ def delay(clock, delay_time):
         continue
 
 def draw_buttons_and_text(button_array, text_array, num_buttons):
-    
+
     for i in range(num_buttons):
         button_array[i].draw()
     if text_array != "NA":
@@ -290,15 +291,15 @@ def instruction_procedure(window, mouse, clock, procedure, button_array):
     indicate that they will move on, or in the case of the mouse input mode, presses the mouse.'''
 
     instruction_path = procedure['Instruction Path']
-    
+
     image = visual.ImageStim(window, image = FILEPATH + INSTRUCTIONS_PATH + instruction_path, pos = (0, 0))
     image.draw()
     window.flip(clearBuffer=False)
-    
+
     num_options = 1 if INPUT_MODE == 0 else 4
     procedure_start_time = datetime.datetime.now()
     response_time, response = get_response(window, mouse, button_array, clock, -2, num_options, INPUT_MODE, [])
-    
+
     results = ["NA", "NA", "NA", "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
     window.flip()
@@ -313,11 +314,10 @@ def study_procedure(window, mouse, clock, procedure):
     '''In the study phase, the user sees the context for 1.5 second, before seeing the alien flash in the context within the next second, and must
     answer which side the alien is on using the buttons within 3 seconds of the flash. If they are correct, they will study the alien in its context for 4 more seconds.
     Otherwise, nothing happens.'''
-    global current_alien_index
     procedure_start_time = clock.getTime()
-    
+
     '''Determines a random time within a 1 second window an alien will flash'''
-    alien_onset = random.random() 
+    alien_onset = random.random()
     current_alien = alien_list[current_alien_index]
     context_path = procedure['Context Path 1']
 
@@ -328,7 +328,7 @@ def study_procedure(window, mouse, clock, procedure):
 
     '''1 second delay'''
     delay(clock, 1.5 + alien_onset)
-    
+
     '''Draws alien in context, along with buttons.'''
     possible_answers = ["Left", "Right"]
     alien_position = ALIEN_ALIGN_RIGHT_POS if (int(procedure['Left/Right']) == 1) else ALIEN_ALIGN_LEFT_POS
@@ -362,10 +362,9 @@ def study_procedure(window, mouse, clock, procedure):
         delay(clock, 4)
 
     recorded_response = response if response == "No answer" else possible_answers[int(response)]
-    results = [response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
+    results = [alien_names[current_alien], response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
     post_procedure(window, procedure, results)
-    current_alien_index += 1
-    
+
 
 
 def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_text):
@@ -373,9 +372,8 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     encountered in the study phase. Additionally, he also answers whether or not he is sure or unsure about his answer.'''
 
     '''Draws alien and buttons on screen.'''
-    global current_alien_index
     current_alien = alien_list[current_alien_index]
-    
+
     draw_alien(window, current_alien, ALIEN_ALIGN_CENTER_POS)
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
     window.flip(clearBuffer=False)
@@ -386,10 +384,9 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
 
     accuracy = 1 if (response < 2 and procedure['Correct Answer'] == "New") or (response >= 2 and procedure['Correct Answer'] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
-    
-    results = [response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
+
+    results = [alien_names[current_alien], response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
-    current_alien_index += 1
 
 def draw_feature(window, feature_position, feature_path):
     feature = visual.ImageStim(window, image = FILEPATH + feature_path, pos = feature_position)
@@ -421,10 +418,8 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     and the third is a non-studied context.'''
 
     '''Draws alien and buttons.'''
-    global current_alien_index
     current_alien = alien_list[current_alien_index]
     draw_alien(window, current_alien, GENERAL_ALIEN_ALIGN_CENTER)
-    current_alien_index += 1
     draw_buttons_and_text(general_buttons, "NA", NUM_GENERAL_BUTTONS)
 
     '''Picks contexts to be used from the file.'''
@@ -444,13 +439,13 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE, [])
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    results = [response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
+    results = [alien_names[current_alien], response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
 
 def main():
 
     '''Function responsible for executing the code running the alien experiment.'''
-    
+
     '''Starts the clock at 0. This marks the beginning of the experiment.'''
     clock = start_clock()
 
@@ -461,9 +456,8 @@ def main():
 
     global alien_list
     global current_alien_index
-    alien_list = get_aliens(window, IMAGES_MAP_PATH, PROCEDURE_PATH + SUBJECT_ID + "proc.csv")
-
-    current_alien_index = 0
+    global alien_names
+    alien_list, alien_names = get_aliens(window, IMAGES_MAP_PATH, PROCEDURE_PATH + SUBJECT_ID + "proc.csv")
 
     procedural_file_list = read_procedural_csv()
 
@@ -476,7 +470,7 @@ def main():
         current_status = get_results_status()
 
 
-    
+
     instruction_buttons, memory_buttons, feature_buttons, general_buttons = create_buttons(window)
 
     memory_button_text, feature_button_text = create_buttons_text(window)
@@ -484,12 +478,11 @@ def main():
     for index, procedure in procedural_file_list.iterrows():
         if current_status > 0:
             '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
-            if procedure['Trial Type'] != 'Instruct' and procedure['Trial Type'] != 'FeatureTest':
-                '''We also offset the index keeping track of which alien to get to account for the skipped procedures.'''
-                current_alien_index += 1
             current_status -= 1
-            continue 
-        
+            continue
+
+        current_alien_index = int(procedure['Alien']) - 2
+
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Trial Type'] == 'Instruct':
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)

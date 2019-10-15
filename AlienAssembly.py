@@ -8,20 +8,14 @@ from params import SCALE
 ALIEN_SIZE = 0.3 * SCALE
 REDUCED_ALIEN_SIZE = 0.2 * SCALE
 
-def get_aliens(window, images_map_path, features_path):
+def get_aliens(window, images_map_path, stim_path):
     """
     Params:
     window - window object that is displayed on
     images_map_path - map of feature id to feature path
-    features_path - procedure file containing the alien descriptions
-    # pos - tuple (x, y) for pixel coordinates alien is located
-    size - size ratio respective to original size (<=0.3 recommended)
+    stim_path - stimulus file containing the alien descriptions
 
-    This function reads in the color for the aliens from the procedure
-    file. Color value of 255 is original color. >255 turns it green-blue.
-    <255 makes the alien a range of colors.
-
-    Returns an array of aliens in the order of the procedure file. Each
+    Returns an array of aliens in the order of the stimulus file. Each
     alien is a list of stimuli that should be passed into the 'stim'
     param of BufferImageStim.
     """
@@ -30,53 +24,41 @@ def get_aliens(window, images_map_path, features_path):
     images_file.fillna(0, inplace=True)
 
 
-    features = ['Body', 'Arms', 'Legs', 'Eyes', 'Mouth', 'Antenna', 'Tail', 'Color']
-    features_file = pd.read_csv(features_path)
-    features_file = features_file.loc[features_file['Trial Type'] != 'FeatureTest']
-    features_file = features_file.loc[features_file['Trial Type'] != 'Instruct']
-    trial_type = features_file['Trial Type']
-    features_file = features_file[features].astype('int')
-    
+    features = ['Body', 'Antenna', 'Eyes', 'Mouth', 'Tail', 'Arms', 'Legs']
+    stim_file = pd.read_excel(stim_path, usecols=features, dtype=dict.fromkeys(features,str))
+
 
     aliens = []
-
+    alien_names = []
     pos = (0, 0)
 
-    size = 0
 
-    trial_type_list = []
-    trial_type_list_index = 0
+    for index, row in stim_file.iterrows():
 
-    for index, value in trial_type.items():
-        trial_type_list.append(str(value))
+        size = ALIEN_SIZE
 
+        name = ""
+        for i in row:
+            name += i
 
-    for index, row in features_file.iterrows():
-        
-        if trial_type_list[trial_type_list_index] == 'GeneralTest':
-            size = REDUCED_ALIEN_SIZE
-        else:
-            size = ALIEN_SIZE
-        trial_type_list_index += 1
-        
-
-        body_row = images_file.loc[str(row['Body']) + '_body']
+        body_row = images_file.loc[row['Body'] + '_body']
         path_col = images_file['Image Path']
 
         # Body
-        path = path_col.loc[str(row['Body']) + '_body']
+        path = path_col.loc[row['Body'] + '_body']
         body = visual.ImageStim(window, image=path, pos=pos)
         body.size *= size
 
         # Skin and Color
-        path = path_col.loc[str(row['Body']) + '_skin']
-        # If color is 255, then randomly change the color of the alien slightly. Else color is set to given number.
+        path = path_col.loc[row['Body'] + '_skin']
+        # Randomly change the color of the alien slightly. Else color is set to given number.
         rand = randint(0, 80, size=(1, 3))
-        color = row['Color'] if row['Color'] != 255 else tuple(*(255 - rand))
+        color = tuple(*(255 - rand))
+        name += '_(' + str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + ')'
         skin = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
         skin.size *= size
 
-        base_id = str(row['Body']) + '_{}_{}'
+        base_id = row['Body'] + '_{}_{}'
 
         # Arms
         path = path_col.loc[base_id.format('arm', row['Arms'])]
@@ -104,7 +86,7 @@ def get_aliens(window, images_map_path, features_path):
         antenna.size *= size
 
         # Tail Base
-        path = path_col.loc[str(row['Body']) + '_tail']
+        path = path_col.loc[row['Body'] + '_tail']
         tail_b = visual.ImageStim(window, image=path, pos=pos)
         tail_b.size *= size
 
@@ -126,5 +108,6 @@ def get_aliens(window, images_map_path, features_path):
             stim_list.append(gloves)
 
         aliens.append(stim_list)
+        alien_names.append(name)
 
-    return aliens
+    return aliens, alien_names
