@@ -1,4 +1,4 @@
-﻿ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Context Path 3,Left/Right,Correct Answer,Order
+ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Context Path 3,Left/Right,Correct Answer,Order
 1,Instruct,NA,study.png,,,,,,,,,,,,,,,NA
 1,Study,blocked,,2,3,4,1,2,4,2,255,NA,basketball_005,NA,,0,Left,BF
 1,Study,blocked,,2,1,2,2,1,1,3,255,NA,desert_001,NAN,,0,Left,BF
@@ -14,5 +14,3 @@
 1,FeatureTest,blocked,,NA,NA,NA,NA,NA,NA,NA,NA,2_arm_1.png,NA,NA,,NA,Studied,
 1,FeatureTest,blocked,,NA,NA,NA,NA,NA,NA,NA,NA,2_ant_1.png,NA,NA,,NA,Tested,
 1,FeatureTest,blocked,,NA,NA,NA,NA,NA,NA,NA,NA,2_eye_1.png,NA,NA,,NA,New,
-1,FeatureTest,,,,,,,,,,,,,,,NA,Studied,
-1,FeatureTest,,,,,,,,,,,,,,,NA,Tested,

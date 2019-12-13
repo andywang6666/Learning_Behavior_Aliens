@@ -8,12 +8,12 @@ from params import SCALE
 ALIEN_SIZE = 0.3 * SCALE
 REDUCED_ALIEN_SIZE = 0.2 * SCALE
 
-def get_aliens(window, images_map_path, stim_path):
+def get_alien(window, images_map_path, procedure):
     """
     Params:
     window - window object that is displayed on
     images_map_path - map of feature id to feature path
-    stim_path - stimulus file containing the alien descriptions
+    procedure - a single line from the procedure file which to create the alien
 
     Returns an array of aliens in the order of the stimulus file. Each
     alien is a list of stimuli that should be passed into the 'stim'
@@ -25,89 +25,80 @@ def get_aliens(window, images_map_path, stim_path):
 
 
     features = ['Body', 'Antenna', 'Eyes', 'Mouth', 'Tail', 'Arms', 'Legs']
-    stim_file = pd.read_excel(stim_path, usecols=features, dtype=dict.fromkeys(features,str))
+    alien_info = procedure[features]
 
-
-    aliens = []
-    alien_names = []
+    name = ''
     pos = (0, 0)
 
+    size = ALIEN_SIZE
 
-    for index, row in stim_file.iterrows():
+    for feat in alien_info:
+        name += feat
 
-        size = ALIEN_SIZE
+    body_row = images_file.loc[row['Body'] + '_body']
+    path_col = images_file['Image Path']
 
-        name = ""
-        for i in row:
-            name += i
+    # Body
+    path = path_col.loc[row['Body'] + '_body']
+    body = visual.ImageStim(window, image=path, pos=pos)
+    body.size *= size
 
-        body_row = images_file.loc[row['Body'] + '_body']
-        path_col = images_file['Image Path']
+    # Skin and Color
+    path = path_col.loc[row['Body'] + '_skin']
+    # Randomly change the color of the alien slightly. Else color is set to given number.
+    rand = randint(0, 80, size=(1, 3))
+    color = tuple(*(255 - rand))
+    name += '_(' + str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + ')'
+    skin = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
+    skin.size *= size
 
-        # Body
-        path = path_col.loc[row['Body'] + '_body']
-        body = visual.ImageStim(window, image=path, pos=pos)
-        body.size *= size
+    base_id = row['Body'] + '_{}_{}'
 
-        # Skin and Color
-        path = path_col.loc[row['Body'] + '_skin']
-        # Randomly change the color of the alien slightly. Else color is set to given number.
-        rand = randint(0, 80, size=(1, 3))
-        color = tuple(*(255 - rand))
-        name += '_(' + str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + ')'
-        skin = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
-        skin.size *= size
+    # Arms
+    path = path_col.loc[base_id.format('arm', row['Arms'])]
+    arms = visual.ImageStim(window, image=path, pos=pos)
+    arms.size *= size
 
-        base_id = row['Body'] + '_{}_{}'
+    # Legs
+    path = path_col.loc[base_id.format('leg', row['Legs'])]
+    legs = visual.ImageStim(window, image=path, pos=pos)
+    legs.size *= size
 
-        # Arms
-        path = path_col.loc[base_id.format('arm', row['Arms'])]
-        arms = visual.ImageStim(window, image=path, pos=pos)
-        arms.size *= size
+    # Eyes
+    path = path_col.loc[base_id.format('eye', row['Eyes'])]
+    eyes = visual.ImageStim(window, image=path, pos=pos)
+    eyes.size *= size
 
-        # Legs
-        path = path_col.loc[base_id.format('leg', row['Legs'])]
-        legs = visual.ImageStim(window, image=path, pos=pos)
-        legs.size *= size
+    # Mouth
+    path = path_col.loc[base_id.format('mou', row['Mouth'])]
+    mouth = visual.ImageStim(window, image=path, pos=pos)
+    mouth.size *= size
 
-        # Eyes
-        path = path_col.loc[base_id.format('eye', row['Eyes'])]
-        eyes = visual.ImageStim(window, image=path, pos=pos)
-        eyes.size *= size
+    # Antenna
+    path = path_col.loc[base_id.format('ant', row['Antenna'])]
+    antenna = visual.ImageStim(window, image=path, pos=pos)
+    antenna.size *= size
 
-        # Mouth
-        path = path_col.loc[base_id.format('mou', row['Mouth'])]
-        mouth = visual.ImageStim(window, image=path, pos=pos)
-        mouth.size *= size
+    # Tail Base
+    path = path_col.loc[row['Body'] + '_tail']
+    tail_b = visual.ImageStim(window, image=path, pos=pos)
+    tail_b.size *= size
 
-        # Antenna
-        path = path_col.loc[base_id.format('ant', row['Antenna'])]
-        antenna = visual.ImageStim(window, image=path, pos=pos)
-        antenna.size *= size
+    # Tail
+    path = path_col.loc[base_id.format('tail', row['Tail'])]
+    tail = visual.ImageStim(window, image=path, pos=pos)
+    tail.size *= size
 
-        # Tail Base
-        path = path_col.loc[row['Body'] + '_tail']
-        tail_b = visual.ImageStim(window, image=path, pos=pos)
-        tail_b.size *= size
+    # Misc (depends on body)
+    gloves = None
+    if row['Body'] == 1:
+        # Gloves
+        path = path_col.loc[base_id.format('gloves', row['Arms'])]
+        gloves = visual.ImageStim(window, image=path, pos=pos)
+        gloves.size *= size
 
-        # Tail
-        path = path_col.loc[base_id.format('tail', row['Tail'])]
-        tail = visual.ImageStim(window, image=path, pos=pos)
-        tail.size *= size
+    alien_object = [tail_b, tail, arms, legs, body, skin, eyes, mouth, antenna]
+    if gloves:
+        alien_object.append(gloves)
 
-        # Misc (depends on body)
-        gloves = None
-        if row['Body'] == 1:
-            # Gloves
-            path = path_col.loc[base_id.format('gloves', row['Arms'])]
-            gloves = visual.ImageStim(window, image=path, pos=pos)
-            gloves.size *= size
-
-        stim_list = [tail_b, tail, arms, legs, body, skin, eyes, mouth, antenna]
-        if gloves:
-            stim_list.append(gloves)
-
-        aliens.append(stim_list)
-        alien_names.append(name)
-
-    return aliens, alien_names
+    return alien_object, name

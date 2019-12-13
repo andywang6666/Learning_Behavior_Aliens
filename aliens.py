@@ -8,7 +8,7 @@ import math
 
 
 from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
-from AlienAssembly import get_aliens
+from AlienAssembly import get_alien
 
 '''More constant parameters used for the functions.'''
 ALIEN_ALIGN_LEFT_POS = (-0.3 * SCALE, 0.1 * SCALE)
@@ -43,8 +43,8 @@ FEATURE_SIZE = 0.3 * SCALE
 '''This index keeps track of the next alien we use when we encounter a trial that involves drawing an alien. We increment it by 1 every time we have a trial type involving an alien.'''
 current_alien_index = 0
 '''This is the alien list keeping track of aliens used in the experiment, appearing in the same order as the trials they are in.'''
-alien_list = []
-alien_names = []
+alien_object = []
+alien_name = []
 
 def start_clock():
     clock = core.Clock()
@@ -318,7 +318,7 @@ def study_procedure(window, mouse, clock, procedure):
 
     '''Determines a random time within a 1 second window an alien will flash'''
     alien_onset = random.random()
-    current_alien = alien_list[current_alien_index]
+    current_alien = alien_object
     context_path = procedure['Context Path 1']
 
     '''Draws context'''
@@ -362,7 +362,7 @@ def study_procedure(window, mouse, clock, procedure):
         delay(clock, 4)
 
     recorded_response = response if response == "No answer" else possible_answers[int(response)]
-    results = [alien_names[current_alien], response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
+    results = [alien_name, response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
     post_procedure(window, procedure, results)
 
 
@@ -372,7 +372,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     encountered in the study phase. Additionally, he also answers whether or not he is sure or unsure about his answer.'''
 
     '''Draws alien and buttons on screen.'''
-    current_alien = alien_list[current_alien_index]
+    current_alien = alien_object
 
     draw_alien(window, current_alien, ALIEN_ALIGN_CENTER_POS)
     draw_buttons_and_text(memory_buttons, button_text, NUM_MEMORY_BUTTONS)
@@ -385,7 +385,7 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     accuracy = 1 if (response < 2 and procedure['Correct Answer'] == "New") or (response >= 2 and procedure['Correct Answer'] == "Old") else 0
     confidence = 1 if (response == 0 or response == 2) else 0
 
-    results = [alien_names[current_alien], response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
+    results = [alien_name, response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
 
 def draw_feature(window, feature_position, feature_path):
@@ -418,7 +418,7 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     and the third is a non-studied context.'''
 
     '''Draws alien and buttons.'''
-    current_alien = alien_list[current_alien_index]
+    current_alien = alien_object
     draw_alien(window, current_alien, GENERAL_ALIEN_ALIGN_CENTER)
     draw_buttons_and_text(general_buttons, "NA", NUM_GENERAL_BUTTONS)
 
@@ -439,7 +439,7 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE, [])
     accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
-    results = [alien_names[current_alien], response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
+    results = [alien_name, response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
 
 def main():
@@ -454,11 +454,6 @@ def main():
     is_visible = False if (INPUT_MODE != 0) else True
     mouse = event.Mouse(visible=is_visible,  newPos = None, win=window)
 
-    global alien_list
-    global current_alien_index
-    global alien_names
-    alien_list, alien_names = get_aliens(window, IMAGES_MAP_PATH, PROCEDURE_PATH + SUBJECT_ID + "proc.csv")
-
     procedural_file_list = read_procedural_csv()
 
     '''First, we determine whether or not there is already data from a previous experiment on the same subject.'''
@@ -469,11 +464,12 @@ def main():
     if new_session == 0:
         current_status = get_results_status()
 
-
-
     instruction_buttons, memory_buttons, feature_buttons, general_buttons = create_buttons(window)
 
     memory_button_text, feature_button_text = create_buttons_text(window)
+
+    global alien_object
+    global alien_name
 
     for index, procedure in procedural_file_list.iterrows():
         if current_status > 0:
@@ -481,18 +477,19 @@ def main():
             current_status -= 1
             continue
 
-        current_alien_index = int(procedure['Alien']) - 2
-
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Trial Type'] == 'Instruct':
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)
         elif procedure['Trial Type'] == 'Study':
+            alien_object, alien_name = get_alien(window, IMAGES_MAP_PATH, procedure)
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Trial Type'] == 'MemoryTest':
+            alien_object, alien_name = get_alien(window, IMAGES_MAP_PATH, procedure)
             memory_procedure(window, mouse, clock, procedure, memory_buttons, memory_button_text)
         elif procedure['Trial Type'] == 'FeatureTest':
             feature_procedure(window, mouse, clock, procedure, feature_buttons, feature_button_text)
         elif procedure['Trial Type'] == 'GeneralTest':
+            alien_object, alien_name = get_alien(window, IMAGES_MAP_PATH, procedure)
             general_procedure(window, mouse, clock, procedure, general_buttons)
 
 
