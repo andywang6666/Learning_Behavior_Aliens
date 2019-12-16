@@ -472,12 +472,12 @@ def main():
     global alien_name
 
     for index, procedure in procedural_file_list.iterrows():
-        print(index)
-        # if current_status > 0:
-        #     '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
-        #     current_status -= 1
-        #     continue
-        print('starting...')
+
+        if current_status > 0:
+            '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
+            current_status -= 1
+            continue
+
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Trial Type'] == 'Instruct':
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)

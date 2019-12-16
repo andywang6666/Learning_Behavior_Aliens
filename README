@@ -1,0 +1,20 @@
+README
+
+
+To run application, use command: python aliens.py OR python3 aliens.py as needed (Python version > 3.0 needed)
+
+
+In params.py:
+
+SUBJECT_ID is the 3 digit ID of the participant that determines what files to read from and the name of the results file.
+Example: With SUBJECT_ID 005, application reads from Data/Procedures/005proc.csv and creates results file Data/Results/005result.csv.
+
+
+Features:
+
+If application crashes or doesn't complete, rerun the experiment with the same SUBJECT_ID as last time to restart the application where it last left off.
+To avoid this and start experiment from the beginning again, either delete the corresponding result file or comment out lines 476 - 479 of aliens.py.
+Using another SUBJECT_ID not used before will run a new experiment from the beginning, creating the corresponding results file.
+
+TODO:
+Male alien features not in images folder. Need to be added to run experiments with male aliens.
