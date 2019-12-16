@@ -1,16 +1,9 @@
-ID,Trial Type,Schedule,Instruction Path,Body,Arms,Legs,Eyes,Mouth,Antenna,Tail,Color,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,ResponseTime,Response,Accuracy,Confidence,Trial Start,Alien Onset Time
-1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-07-31 15:38:28.506220,NA
-1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,basketball_005,nan,nan,0.0,Left,BF,0.9549081792356446,Left,1,NA,2019-07-31 15:38:40.599883,2019-07-31 15:38:42.835765
-1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,desert_001,NAN,nan,0.0,Left,BF,0.46031468361616135,Left,1,NA,2019-07-31 15:38:48.848075,2019-07-31 15:38:50.996388
-1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,snow_021,nan,nan,1.0,Right,IF,1.2455751484958455,Right,1,NA,2019-07-31 15:38:56.240508,2019-07-31 15:38:59.170217
-1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-07-31 15:39:05.202015,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,nan,Old,BF,0.7064590052468702,"Unsure, new",0,0,2019-07-31 15:39:14.071904,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,nan,Old,BF,0.26956916507333517,"Sure, old",1,1,2019-07-31 15:39:15.500452,NA
-1,MemoryTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,nan,nan,nan,nan,Old,BF,0.33100188546814024,"Unsure, old",1,0,2019-07-31 15:39:16.343166,NA
-1,Instruct,nan,D1GR.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-07-31 15:39:17.360775,NA
-1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,ocean,city,mountain,nan,Middle,BF,1.5761879141209647,Left,0,NA,2019-07-31 15:39:20.869174,NA
-1,GeneralTest,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,mountain,ocean,city,nan,Left,BF,1.1143581378273666,Middle,0,NA,2019-07-31 15:39:23.078135,NA
-1,GeneralTest,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,city,mountain,ocean,nan,Right,BF,0.5084802096243948,Right,1,NA,2019-07-31 15:39:24.790371,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_arm_1.png,nan,nan,nan,nan,Studied,nan,1.1153650707565248,Tested,0,NA,2019-07-31 15:39:25.937008,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_ant_1.png,nan,nan,nan,nan,Tested,nan,1.1220308812335134,New,0,NA,2019-07-31 15:39:27.690454,NA
-1,FeatureTest,blocked,nan,nan,nan,nan,nan,nan,nan,nan,nan,2_eye_1.png,nan,nan,nan,nan,New,nan,0.873124320874922,Studied,0,NA,2019-07-31 15:39:29.402302,NA
+ID,Trial Type,Schedule,Instruction Path,Alien,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,Alien Name,ResponseTime,Response,Accuracy,Confidence,Trial Start,Alien Onset Time
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:13:56.197754,NA
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:16:27.204962,NA
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:18:22.367612,NA
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:18:59.733941,NA
+1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,basketball_005,nan,nan,0.0,Left,BF,"2412234_(248,224,206)",0.9326041050371714,Left,1,NA,2019-12-15 19:19:03.195177,2019-12-15 19:19:05.469421
+1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,desert_001,NAN,nan,0.0,Left,BF,"2121312_(248,182,236)",0.6478862789808773,Left,1,NA,2019-12-15 19:19:13.606996,2019-12-15 19:19:16.179777
+1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,snow_021,nan,nan,1.0,Right,IF,"2241341_(208,244,245)",0.9701541200047359,Right,1,NA,2019-12-15 19:19:23.818591,2019-12-15 19:19:26.272043
+1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:19:31.887964,NA

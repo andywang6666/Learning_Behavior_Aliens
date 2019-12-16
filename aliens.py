@@ -472,11 +472,12 @@ def main():
     global alien_name
 
     for index, procedure in procedural_file_list.iterrows():
-        if current_status > 0:
-            '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
-            current_status -= 1
-            continue
-
+        print(index)
+        # if current_status > 0:
+        #     '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
+        #     current_status -= 1
+        #     continue
+        print('starting...')
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Trial Type'] == 'Instruct':
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)
@@ -487,12 +488,15 @@ def main():
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Trial Type'] == 'MemoryTest':
             alien, name = get_alien(window, IMAGES_MAP_PATH, procedure)
-            if name in alien_name:
-                idx = alien_name.index(name)
-                alien_object.append(alien_object[idx])
+            if procedure['Type'] == 'Studied':
+                for idx, n in enumerate(alien_name):
+                    if name[:7] == n[:7]:
+                        alien_object.append(alien_object[idx])
+                        alien_name.append(n)
+                        break
             else:
                 alien_object.append(alien)
-            alien_name.append(name)
+                alien_name.append(name)
             memory_procedure(window, mouse, clock, procedure, memory_buttons, memory_button_text)
         elif procedure['Trial Type'] == 'FeatureTest':
             feature_procedure(window, mouse, clock, procedure, feature_buttons, feature_button_text)
@@ -501,7 +505,6 @@ def main():
             alien_object.append(alien)
             alien_name.append(name)
             general_procedure(window, mouse, clock, procedure, general_buttons)
-
 
 
 
