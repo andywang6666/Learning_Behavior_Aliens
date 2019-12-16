@@ -1,9 +1,6 @@
 ID,Trial Type,Schedule,Instruction Path,Alien,Feature Path,Context Path 1,Context Path 2,Left/Right,Correct Answer,Order,Alien Name,ResponseTime,Response,Accuracy,Confidence,Trial Start,Alien Onset Time
-1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:13:56.197754,NA
-1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:16:27.204962,NA
-1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:18:22.367612,NA
-1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:18:59.733941,NA
-1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,basketball_005,nan,nan,0.0,Left,BF,"2412234_(248,224,206)",0.9326041050371714,Left,1,NA,2019-12-15 19:19:03.195177,2019-12-15 19:19:05.469421
-1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,desert_001,NAN,nan,0.0,Left,BF,"2121312_(248,182,236)",0.6478862789808773,Left,1,NA,2019-12-15 19:19:13.606996,2019-12-15 19:19:16.179777
-1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,snow_021,nan,nan,1.0,Right,IF,"2241341_(208,244,245)",0.9701541200047359,Right,1,NA,2019-12-15 19:19:23.818591,2019-12-15 19:19:26.272043
-1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 19:19:31.887964,NA
+1,Instruct,nan,study.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 23:50:50.302160,NA
+1,Study,blocked,nan,2.0,3.0,4.0,1.0,2.0,4.0,2.0,255.0,nan,basketball_005,nan,nan,0.0,Left,BF,"2412234_(234,203,253)",0.6192734979558736,Right,0,NA,2019-12-15 23:50:53.634578,2019-12-15 23:50:55.435550
+1,Study,blocked,nan,2.0,1.0,2.0,2.0,1.0,1.0,3.0,255.0,nan,desert_001,NAN,nan,0.0,Left,BF,"2121312_(255,233,200)",0.48374987102579325,Right,0,NA,2019-12-15 23:51:01.132491,2019-12-15 23:51:03.342763
+1,Study,interleaved,nan,2.0,4.0,1.0,4.0,1.0,2.0,3.0,255.0,nan,snow_021,nan,nan,1.0,Right,IF,"2241341_(186,232,207)",3.0006351430201903,No answer,0,NA,2019-12-15 23:51:08.555759,2019-12-15 23:51:10.406104
+1,Instruct,nan,D1G.png,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,NA,NA,NA,NA,2019-12-15 23:51:16.055271,NA
