@@ -15,6 +15,3 @@ Features:
 If application crashes or doesn't complete, rerun the experiment with the same SUBJECT_ID as last time to restart the application where it last left off.
 To avoid this and start experiment from the beginning again, either delete the corresponding result file or comment out lines 476 - 479 of aliens.py.
 Using another SUBJECT_ID not used before will run a new experiment from the beginning, creating the corresponding results file.
-
-TODO:
-Male alien features not in images folder. Need to be added to run experiments with male aliens.
