@@ -322,7 +322,7 @@ def study_procedure(window, mouse, clock, procedure):
     context_path = procedure['Context']
 
     '''Draws context'''
-    draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+    # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
     context_start_time = datetime.datetime.now()
 
@@ -330,9 +330,9 @@ def study_procedure(window, mouse, clock, procedure):
     delay(clock, 1.5 + alien_onset)
 
     '''Draws alien in context, along with buttons.'''
-    possible_answers = ["Left", "Right"]
-    alien_position = ALIEN_ALIGN_RIGHT_POS if (int(procedure['Left/Right']) == 1) else ALIEN_ALIGN_LEFT_POS
-    draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+    correct_answer = random.randint(0, 1)
+    alien_position = ALIEN_ALIGN_RIGHT_POS if correct_answer else ALIEN_ALIGN_LEFT_POS
+    # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(window, current_alien, alien_position)
     window.flip(clearBuffer=False)
     alien_start_time = datetime.datetime.now()
@@ -343,25 +343,25 @@ def study_procedure(window, mouse, clock, procedure):
 
 
     if (response == "No answer"):
-         draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+         # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
          window.flip(clearBuffer=False)
          response_time, response = get_response(window, mouse, "NA", clock, 2, 2, 3, return_list)
          response_time += 1
 
     '''If the response is incorrect, display an appropriate error message.'''
-    if response == "No answer" or procedure['Correct Answer'] != possible_answers[int(response)]:
+    if response == "No answer" or correct_answer != int(response):
         accuracy = 0
         display_incorrect_message(window)
         delay(clock, 2)
     else:
         '''If the user answers correctly, display the alien and context for 4 more seconds.'''
         accuracy = 1
-        draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+        # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
         draw_alien(window, current_alien, ALIEN_ALIGN_CENTER_POS)
         window.flip(clearBuffer=False)
         delay(clock, 4)
 
-    recorded_response = response if response == "No answer" else possible_answers[int(response)]
+    recorded_response = response if response == "No answer" else int(response)
     results = [alien_name[-1], response_time, recorded_response, accuracy, "NA", context_start_time, alien_start_time]
     post_procedure(window, procedure, results)
 
@@ -473,10 +473,10 @@ def main():
 
     for index, procedure in procedural_file_list.iterrows():
 
-        if current_status > 0:
-            '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
-            current_status -= 1
-            continue
+        # if current_status > 0:
+        #     '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
+        #     current_status -= 1
+        #     continue
 
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Phase'] == 'Instruct':

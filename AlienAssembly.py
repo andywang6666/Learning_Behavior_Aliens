@@ -92,6 +92,11 @@ def get_alien(window, features_path, procedure):
     tail = visual.ImageStim(window, image=path, pos=pos)
     tail.size *= size
 
-    alien_object = [tail, arms, legs, body, skin, eyes, mouth, antenna]
+
+    # Different layers ordering for male and female aliens
+    if alien_info['Body'] == '1':
+        alien_object = [tail, skin, arms, legs, body, eyes, mouth, antenna]
+    else:
+        alien_object = [tail, arms, legs, body, skin, eyes, mouth, antenna]
 
     return alien_object, name
