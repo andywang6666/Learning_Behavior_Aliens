@@ -7,7 +7,7 @@ import pandas as pd
 import math
 
 
-from params import CONDITION, SUBJECT_ID, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, IMAGES_MAP_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
+from params import CONDITION, ID, PARTICIPANT_NUM, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, FEATURES_PLACED_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
 from AlienAssembly import get_alien
 
 '''More constant parameters used for the functions.'''
@@ -61,15 +61,15 @@ def create_window():
     return window
 
 def read_procedural_csv():
-    procedural_file_list = pd.read_csv(FILEPATH + PROCEDURE_PATH + SUBJECT_ID + 'proc.csv')
+    procedural_file_list = pd.read_csv(FILEPATH + PROCEDURE_PATH)
     return procedural_file_list
 
 def create_results_file():
     '''Creates a results file if a previous one doesn't exist.'''
-    if os.path.isfile(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv"):
+    if os.path.isfile(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv"):
         return 0
 
-    with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'w+t', newline='') as results_file:
+    with open(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
         procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Alien", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "Alien Name", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
@@ -78,7 +78,7 @@ def create_results_file():
 def get_results_status():
     '''Gets the index of the last procedure that the previous experiment stopped at.'''
     results_list = []
-    with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'rt') as results_file:
+    with open(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv", 'rt') as results_file:
         results_reader = csv.reader(results_file, delimiter=',')
         results_list = list(results_reader)
 
@@ -160,7 +160,7 @@ def create_buttons_text(window):
 
 def draw_context(window, context_position, context_path, image_size):
     '''Draws context(environment) alien is in on the screen.'''
-    context = visual.ImageStim(window, image = FILEPATH + CONTEXTS_PATH + context_path + ".jpg", size = image_size, pos = context_position)
+    context = visual.ImageStim(window, image = FILEPATH + CONTEXTS_PATH + context_path, size = image_size, pos = context_position)
     context.draw()
 
 def draw_alien(window, stim_list, position):
@@ -253,7 +253,7 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options, inp
 def record_procedure(procedure, results):
     '''Records the results for each phase, which are the parameters to the function, in the appropriate CSV file.'''
     '''result_row = procedure.to_list().extend((response_time, response, accuracy, confidence))'''
-    with open(FILEPATH + RESULTS_PATH + SUBJECT_ID + "result.csv", 'a', newline='') as procedure_file:
+    with open(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv", 'a', newline='') as procedure_file:
         result_row = procedure.append(pd.Series(results))
         procedure_csv_writer = csv.writer(procedure_file, delimiter=',')
         procedure_csv_writer.writerow(result_row)
@@ -319,7 +319,7 @@ def study_procedure(window, mouse, clock, procedure):
     '''Determines a random time within a 1 second window an alien will flash'''
     alien_onset = random.random()
     current_alien = alien_object[-1]
-    context_path = procedure['Context Path 1']
+    context_path = procedure['Context']
 
     '''Draws context'''
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
@@ -423,9 +423,9 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     draw_buttons_and_text(general_buttons, "NA", NUM_GENERAL_BUTTONS)
 
     '''Picks contexts to be used from the file.'''
-    context_path_1 = procedure['Context Path 1']
-    context_path_2 = procedure['Context Path 2']
-    context_path_3 = procedure['Context Path 3']
+    context_path_1 = procedure['Context']
+    # context_path_2 = procedure['Context Path 2']
+    # context_path_3 = procedure['Context Path 3']
 
 
     possible_answers = ["Left", "Middle", "Right"]
@@ -479,16 +479,17 @@ def main():
             continue
 
         '''Executes specific type of procedure based on the trial type read.'''
-        if procedure['Trial Type'] == 'Instruct':
+        if procedure['Phase'] == 'Instruct':
+            continue # SKIP INSTRUCTION PHASE FOR NOW
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)
-        elif procedure['Trial Type'] == 'Study':
-            alien, name = get_alien(window, IMAGES_MAP_PATH, procedure)
+        elif procedure['Phase'] == 'Study':
+            alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
             study_procedure(window, mouse, clock,  procedure)
-        elif procedure['Trial Type'] == 'MemoryTest':
-            alien, name = get_alien(window, IMAGES_MAP_PATH, procedure)
-            if procedure['Type'] == 'Studied':
+        elif procedure['Phase'] == 'MemoryTest':
+            alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
+            if procedure['Type'] == 'Study':
                 for idx, n in enumerate(alien_name):
                     if name[:7] == n[:7]:
                         alien_object.append(alien_object[idx])
@@ -498,10 +499,11 @@ def main():
                 alien_object.append(alien)
                 alien_name.append(name)
             memory_procedure(window, mouse, clock, procedure, memory_buttons, memory_button_text)
-        elif procedure['Trial Type'] == 'FeatureTest':
+        elif procedure['Phase'] == 'FeatureTest':
+            continue # SKIP FEATURE TEST PHASE
             feature_procedure(window, mouse, clock, procedure, feature_buttons, feature_button_text)
-        elif procedure['Trial Type'] == 'GeneralTest':
-            alien, name = get_alien(window, IMAGES_MAP_PATH, procedure)
+        elif procedure['Phase'] == 'GeneralTest':
+            alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
             general_procedure(window, mouse, clock, procedure, general_buttons)
