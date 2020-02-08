@@ -322,7 +322,7 @@ def study_procedure(window, mouse, clock, procedure):
     context_path = procedure['Context']
 
     '''Draws context'''
-    # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+    draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
     context_start_time = datetime.datetime.now()
 
@@ -332,7 +332,7 @@ def study_procedure(window, mouse, clock, procedure):
     '''Draws alien in context, along with buttons.'''
     correct_answer = random.randint(0, 1)
     alien_position = ALIEN_ALIGN_RIGHT_POS if correct_answer else ALIEN_ALIGN_LEFT_POS
-    # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+    draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     draw_alien(window, current_alien, alien_position)
     window.flip(clearBuffer=False)
     alien_start_time = datetime.datetime.now()
@@ -343,7 +343,7 @@ def study_procedure(window, mouse, clock, procedure):
 
 
     if (response == "No answer"):
-         # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+         draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
          window.flip(clearBuffer=False)
          response_time, response = get_response(window, mouse, "NA", clock, 2, 2, 3, return_list)
          response_time += 1
@@ -356,7 +356,7 @@ def study_procedure(window, mouse, clock, procedure):
     else:
         '''If the user answers correctly, display the alien and context for 4 more seconds.'''
         accuracy = 1
-        # draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
+        draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
         draw_alien(window, current_alien, ALIEN_ALIGN_CENTER_POS)
         window.flip(clearBuffer=False)
         delay(clock, 4)
