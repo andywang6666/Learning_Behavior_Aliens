@@ -64,14 +64,15 @@ def read_procedural_csv():
     procedural_file_list = pd.read_csv(FILEPATH + PROCEDURE_PATH)
     return procedural_file_list
 
-def create_results_file():
+def create_results_file(procedure_file):
     '''Creates a results file if a previous one doesn't exist.'''
     if os.path.isfile(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv"):
         return 0
 
     with open(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
-        procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Alien", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "Alien Name", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
+        procedural_file_writer.writerow(list(procedure_file.columns) + ['Alien Name', 'Response Time', 'Response', 'Accuracy', 'Instruction Image', 'Context Start Time', 'Alien Start Time'])
+        # procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Alien", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "Alien Name", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
     return 1
 
@@ -457,7 +458,7 @@ def main():
     procedural_file_list = read_procedural_csv()
 
     '''First, we determine whether or not there is already data from a previous experiment on the same subject.'''
-    new_session = create_results_file()
+    new_session = create_results_file(procedural_file_list)
 
     '''If there is, we get the index of the procedure that the experiment stopped at.'''
     current_status = 0
