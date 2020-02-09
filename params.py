@@ -18,7 +18,7 @@ FEATURE_PATH = 'Data/Images/feature_only/'
 FEATURES_PLACED_PATH = 'Data/Images/Features_Placed/'
 RESULTS_PATH = 'Data/Results/'
 INSTRUCTIONS_PATH = 'Data/Images/Instructions/'
-CONTEXTS_PATH = 'Data/'
+CONTEXTS_PATH = 'Data/Images/Context/'
 
 SCALE = 1
 

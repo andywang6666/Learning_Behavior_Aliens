@@ -492,7 +492,6 @@ def main():
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
-            continue
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Phase'] == 'MemoryTest':
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
