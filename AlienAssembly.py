@@ -33,9 +33,18 @@ def get_alien(window, features_path, procedure):
 
     base_id = alien_info['Body'] + '_{}_{}.png'
 
+    # Randomly change the color of the alien slightly. Else color is set to given number.
+    rand = randint(0, 80, size=(1, 3))
+    color = tuple(*(255 - rand))
+
     # Body
     path = features_path + alien_info['Body'] + '_body.png'
-    body = visual.ImageStim(window, image=path, pos=pos)
+    if alien_info['Body'] == '1':
+        # Male alien's body needs to be colored too
+        body = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
+    else:
+        # Female alien's body isn't colored
+        body = visual.ImageStim(window, image=path, pos=pos)
     body.size *= size
 
     # Skin and Color: Male and female has different skin image name formats
@@ -43,9 +52,6 @@ def get_alien(window, features_path, procedure):
         path = features_path + base_id.format('skin', alien_info['Arms'])
     else:
         path = features_path + alien_info['Body'] + '_skin.png'
-    # Randomly change the color of the alien slightly. Else color is set to given number.
-    rand = randint(0, 80, size=(1, 3))
-    color = tuple(*(255 - rand))
     name += '_(' + str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + ')'
     skin = visual.ImageStim(window, image=path, pos=pos, color=color, colorSpace='rgb255')
     skin.size *= size
