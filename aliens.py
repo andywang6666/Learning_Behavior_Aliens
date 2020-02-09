@@ -71,7 +71,7 @@ def create_results_file(procedure_file):
 
     with open(FILEPATH + RESULTS_PATH + ID + "_" + PARTICIPANT_NUM + "_" + "result.csv", 'w+t', newline='') as results_file:
         procedural_file_writer = csv.writer(results_file, delimiter= ',')
-        procedural_file_writer.writerow(list(procedure_file.columns) + ['Alien Name', 'Response Time', 'Response', 'Accuracy', 'Instruction Image', 'Context Start Time', 'Alien Start Time'])
+        procedural_file_writer.writerow(list(procedure_file.columns) + ['Alien Name', 'Response Time', 'Response', 'Accuracy', 'Confidence', 'Context Start Time', 'Alien Start Time'])
         # procedural_file_writer.writerow(["ID", "Trial Type", "Schedule", "Instruction Path", "Alien", "Feature Path", "Context Path 1", "Context Path 2", "Left/Right", "Correct Answer", "Order", "Alien Name", "ResponseTime", "Response", "Accuracy", "Confidence", "Trial Start", "Alien Onset Time"])
 
     return 1
@@ -145,7 +145,7 @@ def create_buttons_text(window):
     '''Creates text on buttons used for all 4 phases of the experiment.'''
     '''Text content contains what will be displayed on the buttons for each trial, with the number of entries in each list for each phase
     corresponding to the number of buttons for that phase, corresponding to the buttons in left to right order.'''
-    memory_text_content = ["1 - Sure,\n   new", "2 - Unsure,\n     new", "3 - Sure,\n    old", "4 - Unsure,\n      old"]
+    memory_text_content = ["1 - Sure,\n   new", "2 - Unsure,\n     new", "3 - Unsure,\n    old", "4 - Sure,\n      old"]
     feature_text_content = ["Studied", "Tested", "New"]
     general_text_content = ["Left Context", "Middle Context", "Right Context"]
 
@@ -190,6 +190,11 @@ def get_response(window, mouse, button_array, clock, wait_time, num_options, inp
                         response = i
                         return_list.extend([response_time, response])
                         return response_time, response
+
+                # Closes application when key 'q' is pressed
+                if event.getKeys(keyList=['q']):
+                    window.close()
+                    core.quit()
 
         else:
             '''Timed version of the block of code above.'''
@@ -301,7 +306,7 @@ def instruction_procedure(window, mouse, clock, procedure, button_array):
     procedure_start_time = datetime.datetime.now()
     response_time, response = get_response(window, mouse, button_array, clock, -2, num_options, INPUT_MODE, [])
 
-    results = ["NA", "NA", "NA", "NA", procedure_start_time, "NA"]
+    results = ["NA", "NA", "NA", "NA", "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
     window.flip()
 
@@ -381,10 +386,10 @@ def memory_procedure(window, mouse, clock, procedure, memory_buttons, button_tex
     procedure_start_time = datetime.datetime.now()
 
     response_time, response = get_response(window, mouse, memory_buttons, clock, -1, 4, INPUT_MODE, [])
-    possible_answers = ["Sure, new", "Unsure, new", "Sure, old", "Unsure, old"]
+    possible_answers = ["Sure, new", "Unsure, new", "Unsure, old", "Sure, old"]
 
-    accuracy = 1 if (response < 2 and procedure['Correct Answer'] == "New") or (response >= 2 and procedure['Correct Answer'] == "Old") else 0
-    confidence = 1 if (response == 0 or response == 2) else 0
+    accuracy = 1 if (response < 2 and procedure['Type'] != 'Study') or (response >= 2 and procedure['Type'] == 'Study') else 0
+    confidence = 1 if (response == 0 or response == 3) else 0
 
     results = [alien_name[-1], response_time, possible_answers[int(response)], accuracy, confidence, procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
@@ -487,6 +492,7 @@ def main():
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
+            continue
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Phase'] == 'MemoryTest':
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
