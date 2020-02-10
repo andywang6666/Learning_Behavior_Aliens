@@ -15,36 +15,30 @@ ALIEN_ALIGN_LEFT_POS = (-0.3 * SCALE, 0.1 * SCALE)
 ALIEN_ALIGN_RIGHT_POS = (0.3 * SCALE, 0.1 * SCALE)
 ALIEN_ALIGN_CENTER_POS = (0, 0.1 * SCALE)
 GENERAL_ALIEN_ALIGN_CENTER = (0, 0.2 * SCALE)
-CONTEXT_ALIGN_CENTER_POS = (0, 0.1 * SCALE)
-CONTEXT_ALIGN_LEFT_POS = (-0.4 * SCALE, 0.1 * SCALE)
-CONTEXT_ALIGN_RIGHT_POS = (0.4 * SCALE, 0.1 * SCALE)
-GENERAL_CONTEXT_ALIGN_LEFT = (-0.6 * SCALE, -0.2 * SCALE)
-GENERAL_CONTEXT_ALIGN_RIGHT = (0.6 * SCALE, -0.2 * SCALE)
-GENERAL_CONTEXT_ALIGN_CENTER = (0, -0.2 * SCALE)
+CONTEXT_ALIGN_CENTER_POS = (0, 0 * SCALE)
 
 FEATURE_ALIGN_CENTER_POS = ALIEN_ALIGN_CENTER_POS
 FEATURE_BUTTONS_X_POSITIONS = [-0.5 * SCALE, 0, 0.5 * SCALE]
-FEATURE_BUTTONS_Y_POSITIONS = [-0.3 * SCALE]
+FEATURE_BUTTONS_Y_POSITIONS = [-0.3 * SCALE, -0.3 * SCALE, -0.3 * SCALE]
 MEMORY_BUTTONS_X_POSITIONS = [-0.6 * SCALE, -0.2 * SCALE, 0.2 * SCALE, 0.6 * SCALE]
-MEMORY_BUTTONS_Y_POSITIONS = [-0.3 * SCALE]
-GENERAL_BUTTONS_X_POSITIONS = [-0.6 * SCALE, 0, 0.6 * SCALE]
-GENERAL_BUTTONS_Y_POSITIONS = [-0.2 * SCALE]
+MEMORY_BUTTONS_Y_POSITIONS = [-0.3 * SCALE, -0.3 * SCALE, -0.3 * SCALE, -0.3 * SCALE]
+GENERAL_BUTTONS_X_POSITIONS = [-0.5 * SCALE, 0, 0.5 * SCALE, -0.25 * SCALE, 0.25 * SCALE]
+GENERAL_BUTTONS_Y_POSITIONS = [-0.125 * SCALE, -0.125 * SCALE, -0.125 * SCALE, -0.35 * SCALE, -0.35 * SCALE]
 NUM_STUDY_BUTTONS = 2
 NUM_MEMORY_BUTTONS = 4
 NUM_FEATURE_BUTTONS = 3
-NUM_GENERAL_BUTTONS = 3
+NUM_GENERAL_BUTTONS = 5
 NUM_FEATURES = 8
 ALIEN_SIZE = 0.3
 REDUCED_ALIEN_SIZE = 0.2
-CONTEXT_SIZE = [1.1 * SCALE, 0.7 * SCALE]
-REDUCED_CONTEXT_SIZE = [0.45 * SCALE, 0.3 * SCALE]
+CONTEXT_SIZE = [1.6 * SCALE, 1 * SCALE]
+REDUCED_CONTEXT_SIZE = [0.4 * SCALE, 0.2 * SCALE]
 FEATURE_SIZE = 0.3 * SCALE
 
-'''This index keeps track of the next alien we use when we encounter a trial that involves drawing an alien. We increment it by 1 every time we have a trial type involving an alien.'''
-current_alien_index = 0
 '''This is the alien list keeping track of aliens used in the experiment, appearing in the same order as the trials they are in.'''
 alien_object = []
 alien_name = []
+studied_contexts = set()
 
 def start_clock():
     clock = core.Clock()
@@ -122,7 +116,7 @@ def create_buttons_from_dimensions(window, x_pos_array, y_pos_array, num_buttons
 
     '''Creates the buttons in the window from dimensions.'''
     for i in range (num_buttons):
-        button_array.append(visual.Rect(window, opacity = opaqueness, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = width, height = height, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[0])))
+        button_array.append(visual.Rect(window, opacity = opaqueness, fillColor = rgb_to_hex(fill_color_array[i]), fillColorSpace = 'rgb', width = width, height = height, lineWidth = .5, lineColor = 'black', pos = (x_pos_array[i], y_pos_array[i])))
     return button_array
 
 
@@ -131,7 +125,7 @@ def create_buttons(window):
     instruction_buttons = create_buttons_from_dimensions(window, [0], [0], 1, False, 0, 2, 1)
     memory_buttons = create_buttons_from_dimensions(window, MEMORY_BUTTONS_X_POSITIONS, MEMORY_BUTTONS_Y_POSITIONS, NUM_MEMORY_BUTTONS, True, 1, 0.3 * SCALE, 0.1 * SCALE)
     feature_buttons = create_buttons_from_dimensions(window, FEATURE_BUTTONS_X_POSITIONS, FEATURE_BUTTONS_Y_POSITIONS, NUM_FEATURE_BUTTONS, False, 1, 0.3 * SCALE, 0.1 * SCALE)
-    general_buttons = create_buttons_from_dimensions(window, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS, False, 0, 0.45 * SCALE, 0.3 * SCALE)
+    general_buttons = create_buttons_from_dimensions(window, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS, NUM_GENERAL_BUTTONS, False, 0, REDUCED_CONTEXT_SIZE[0], REDUCED_CONTEXT_SIZE[1])
     return instruction_buttons, memory_buttons, feature_buttons, general_buttons
 
 def button_text_from_dimensions(window, text_content, x_pos_array, y_pos_array, num_buttons):
@@ -327,6 +321,11 @@ def study_procedure(window, mouse, clock, procedure):
     current_alien = alien_object[-1]
     context_path = procedure['Context']
 
+    '''Update contexts studied global variable for generalization test'''
+    global studied_contexts
+    studied_contexts.add(procedure['Context_Answer'])
+    print('ADDED:', procedure['Context_Answer'])
+
     '''Draws context'''
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
@@ -429,21 +428,36 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
     draw_buttons_and_text(general_buttons, "NA", NUM_GENERAL_BUTTONS)
 
     '''Picks contexts to be used from the file.'''
-    context_path_1 = procedure['Context']
-    # context_path_2 = procedure['Context Path 2']
-    # context_path_3 = procedure['Context Path 3']
+    global studied_contexts
 
+    possible_answers = []
+    context_images = []
+    
+    for context in studied_contexts:
+        possible_answers.append(context)
 
-    possible_answers = ["Left", "Middle", "Right"]
-    draw_context(window, GENERAL_CONTEXT_ALIGN_LEFT, context_path_1, REDUCED_CONTEXT_SIZE)
-    draw_context(window, GENERAL_CONTEXT_ALIGN_CENTER, context_path_2, REDUCED_CONTEXT_SIZE)
-    draw_context(window, GENERAL_CONTEXT_ALIGN_RIGHT, context_path_3, REDUCED_CONTEXT_SIZE)
+        image_num = random.randint(5, 8)
+        context_images.append(context.lower() + '_' + str(image_num) + '.jpg')
+
+    # There are only four studied contexts. Fifth context is new and not studied before.
+    possible_answers.append('New: Forest')
+    image_num = random.randint(5, 8)
+    context_images.append('forest_' + str(image_num) + '.jpg')
+
+    for context_img, context_x, context_y in zip(context_images, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS):
+        draw_context(window, (context_x, context_y), context_img, REDUCED_CONTEXT_SIZE)
 
     window.flip(clearBuffer=False)
     procedure_start_time = datetime.datetime.now()
 
-    response_time, response = get_response(window, mouse, general_buttons, clock, -1, 3, INPUT_MODE, [])
-    accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
+    response_time, response = get_response(window, mouse, general_buttons, clock, -1, 5, INPUT_MODE, [])
+
+    if (int(response) == 4 and (procedure['Type'] in ['new cat', 'new all'])): # TODO: INCOMPLETE
+        accuracy = 1
+    else:
+        accuracy = 0
+
+    # accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
     results = [alien_name[-1], response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
@@ -477,6 +491,7 @@ def main():
     global alien_object
     global alien_name
 
+    test = -1
     for index, procedure in procedural_file_list.iterrows():
 
         # if current_status > 0:
@@ -489,11 +504,16 @@ def main():
             continue # SKIP INSTRUCTION PHASE FOR NOW
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)
         elif procedure['Phase'] == 'Study':
+            test += 1
+            if test % 20 != 0:
+                continue
+
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Phase'] == 'MemoryTest':
+            continue
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             if procedure['Type'] == 'Study':
                 for idx, n in enumerate(alien_name):
