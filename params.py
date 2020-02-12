@@ -2,6 +2,7 @@ CONDITION = 1
 
 ID = '40'
 PARTICIPANT_NUM = '1'
+ORDER = 'BF'
 
 HRES = 1024
 VRES = 768
@@ -13,7 +14,7 @@ SCREENDISTANCE = 57
 SCREENWIDTH = 30
 
 FILEPATH = ''
-PROCEDURE_PATH = 'Data/Procedures/40_1_BF_FullProc.csv'
+PROCEDURE_PATH = 'Data/Procedures/'
 FEATURE_PATH = 'Data/Images/feature_only/'
 FEATURES_PLACED_PATH = 'Data/Images/Features_Placed/'
 RESULTS_PATH = 'Data/Results/'

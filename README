@@ -4,14 +4,21 @@ README
 To run application, use command: python aliens.py OR python3 aliens.py as needed (Python version > 3.0 needed)
 
 
+Full procedure file names are structured as ID_PARTICIPANTNUM_ORDER_FullProc.csv
+
+
 In params.py:
 
-SUBJECT_ID is the 3 digit ID of the participant that determines what files to read from and the name of the results file.
-Example: With SUBJECT_ID 005, application reads from Data/Procedures/005proc.csv and creates results file Data/Results/005result.csv.
+ID              - Participant ID which final procedure files has been created from
+PARTICIPANT_NUM - A number from 1 to 4 that is one of the four full procedure files made from FullProc.csv
+ORDER           - 'BF' or 'IF' for which study blocking type comes first
 
 
 Features:
 
-If application crashes or doesn't complete, rerun the experiment with the same SUBJECT_ID as last time to restart the application where it last left off.
+If application crashes or doesn't complete, rerun the experiment with the same procedure file as last time to restart the application where it last left off.
 To avoid this and start experiment from the beginning again, either delete the corresponding result file or comment out lines 476 - 479 of aliens.py.
-Using another SUBJECT_ID not used before will run a new experiment from the beginning, creating the corresponding results file.
+Using another ID, PARTICIPANT_NUM, or ORDER not used before will run a new experiment from the beginning, creating the corresponding results file.
+
+
+Press 'q' on the keyboard to exit application whenever the application is accepting input.

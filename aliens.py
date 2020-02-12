@@ -7,7 +7,7 @@ import pandas as pd
 import math
 
 
-from params import CONDITION, ID, PARTICIPANT_NUM, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, FEATURES_PLACED_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
+from params import CONDITION, ID, PARTICIPANT_NUM, ORDER, HRES, VRES, EXPHRES, EXPVRES, SCREENDISTANCE, SCREENWIDTH, FILEPATH, INPUT_MODE, OFFSET, PROCEDURE_PATH, RESULTS_PATH, FEATURE_PATH, FEATURES_PLACED_PATH, INSTRUCTIONS_PATH, CONTEXTS_PATH, SCALE
 from AlienAssembly import get_alien
 
 '''More constant parameters used for the functions.'''
@@ -55,7 +55,7 @@ def create_window():
     return window
 
 def read_procedural_csv():
-    procedural_file_list = pd.read_csv(FILEPATH + PROCEDURE_PATH)
+    procedural_file_list = pd.read_csv(FILEPATH + PROCEDURE_PATH + ID + '_' + PARTICIPANT_NUM + '_' + ORDER + '_FullProc.csv')
     return procedural_file_list
 
 def create_results_file(procedure_file):
