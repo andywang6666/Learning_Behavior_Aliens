@@ -38,7 +38,7 @@ FEATURE_SIZE = 0.3 * SCALE
 '''This is the alien list keeping track of aliens used in the experiment, appearing in the same order as the trials they are in.'''
 alien_object = []
 alien_name = []
-studied_contexts = set()
+studied_contexts = {}
 
 def start_clock():
     clock = core.Clock()
@@ -323,15 +323,15 @@ def study_procedure(window, mouse, clock, procedure):
 
     '''Update contexts studied global variable for generalization test'''
     global studied_contexts
-    studied_contexts.add(procedure['Context_Answer'])
-    print('ADDED:', procedure['Context_Answer'])
+    if procedure['Category'] not in studied_contexts:
+        studied_contexts[procedure['Category']] = procedure['Context_Answer']
 
     '''Draws context'''
     draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
     window.flip(clearBuffer=False)
     context_start_time = datetime.datetime.now()
 
-    '''1 second delay'''
+    '''1.5 second delay'''
     delay(clock, 1.5 + alien_onset)
 
     '''Draws alien in context, along with buttons.'''
@@ -346,6 +346,7 @@ def study_procedure(window, mouse, clock, procedure):
 
     response_time, response = get_response(window, mouse, "NA", clock, 1, 2, 3, return_list)
 
+    delay(clock, 0.5)
 
     if (response == "No answer"):
          draw_context(window, CONTEXT_ALIGN_CENTER_POS, context_path, CONTEXT_SIZE)
@@ -432,17 +433,20 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
 
     possible_answers = []
     context_images = []
-    
-    for context in studied_contexts:
+
+    for context in studied_contexts.values():
         possible_answers.append(context)
 
         image_num = random.randint(5, 8)
         context_images.append(context.lower() + '_' + str(image_num) + '.jpg')
 
     # There are only four studied contexts. Fifth context is new and not studied before.
-    possible_answers.append('New: Forest')
+    # New context is randomly selected between forest and dryland
+    new_context = ['Forest', 'Dryland']
+    rand = random.randint(0, 1)
+    possible_answers.append('New: ' + new_context[rand])
     image_num = random.randint(5, 8)
-    context_images.append('forest_' + str(image_num) + '.jpg')
+    context_images.append(new_context[rand].lower() + '_' + str(image_num) + '.jpg')
 
     for context_img, context_x, context_y in zip(context_images, GENERAL_BUTTONS_X_POSITIONS, GENERAL_BUTTONS_Y_POSITIONS):
         draw_context(window, (context_x, context_y), context_img, REDUCED_CONTEXT_SIZE)
@@ -452,12 +456,12 @@ def general_procedure(window, mouse, clock, procedure, general_buttons):
 
     response_time, response = get_response(window, mouse, general_buttons, clock, -1, 5, INPUT_MODE, [])
 
-    if (int(response) == 4 and (procedure['Type'] in ['new cat', 'new all'])): # TODO: INCOMPLETE
+    if (procedure['Category'] not in studied_contexts and int(response) == 4) \
+            or (procedure['Category'] in studied_contexts \
+            and possible_answers[int(response)] == studied_contexts[procedure['Category']]):
         accuracy = 1
     else:
         accuracy = 0
-
-    # accuracy = 1 if procedure['Correct Answer'] == possible_answers[int(response)] else 0
 
     results = [alien_name[-1], response_time, possible_answers[int(response)], accuracy, "NA", procedure_start_time, "NA"]
     post_procedure(window, procedure, results)
@@ -491,29 +495,28 @@ def main():
     global alien_object
     global alien_name
 
-    test = -1
+    # skip_study = -1
     for index, procedure in procedural_file_list.iterrows():
 
-        # if current_status > 0:
-        #     '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
-        #     current_status -= 1
-        #     continue
+        if current_status > 0:
+            '''We skip procedures until we get to the one that the previous experiment run stopped at.'''
+            current_status -= 1
+            continue
 
         '''Executes specific type of procedure based on the trial type read.'''
         if procedure['Phase'] == 'Instruct':
             continue # SKIP INSTRUCTION PHASE FOR NOW
             instruction_procedure(window, mouse, clock, procedure, instruction_buttons)
         elif procedure['Phase'] == 'Study':
-            test += 1
-            if test % 20 != 0:
-                continue
+            # skip_study += 1
+            # if skip_study % 20 != 0:
+            #     continue
 
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             alien_object.append(alien)
             alien_name.append(name)
             study_procedure(window, mouse, clock,  procedure)
         elif procedure['Phase'] == 'MemoryTest':
-            continue
             alien, name = get_alien(window, FEATURES_PLACED_PATH, procedure)
             if procedure['Type'] == 'Study':
                 for idx, n in enumerate(alien_name):
