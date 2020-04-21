@@ -22,3 +22,18 @@ Using another ID, PARTICIPANT_NUM, or ORDER not used before will run a new exper
 
 
 Press 'q' on the keyboard to exit application whenever the application is accepting input.
+
+
+----------------------------------------------------------------------------------------
+
+Aliens Application Procedure
+
+
+Study Phase
+
+Context is displayed.
+After 1.5 seconds, alien is displayed at a random time within the next 1 second.
+When alien is displayed, user has 1 second to give response (left/right).
+After response is received or response period expires, there is a 0.5 second delay.
+If response is correct, display alien centered on the screen for 4 seconds.
+If response is incorrect or not received, display error message for 2 seconds.
